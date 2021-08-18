@@ -2,6 +2,7 @@
 #include <ncurses.h>
 #include <cstdlib>
 #include "level.hpp"
+#include <unistd.h>
 
 using namespace std;
 
