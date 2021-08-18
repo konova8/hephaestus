@@ -10,7 +10,6 @@ class Level
 {
     protected:
         Player player;
-        
 };
 
 #endif
