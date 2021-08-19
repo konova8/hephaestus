@@ -7,10 +7,15 @@
 using namespace std;
 
 struct mapNode {
-    int index = 0;
+    int index;
     mapNode *prev = NULL;
-    Level currentLevel; //Assign to initLevel(int index) 
+    Level currentLevel = index; //??????????????????
     mapNode *next = NULL;
+    mapNode(int Index)
+    {
+        index = Index;
+        currentLevel = Index; //??????????????????
+    }
 };
 
 int main() {
