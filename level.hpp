@@ -20,6 +20,7 @@ class Level
         int updateCounter;
         int turretUpdateTime;
         int enemiesUpdateTime;
+        void isMoveLegal(Player player, int keyPressed);
     public:
         Level(int index);
         void drawLevel();
