@@ -10,6 +10,7 @@ class Bonus
         int x;
         int y;
     Bonus(Level currentLevel);
+    void remove();
 };
 
 #endif

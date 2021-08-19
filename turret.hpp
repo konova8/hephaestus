@@ -9,7 +9,7 @@ class Turret
         int y;
         Bullet bullet;
     public:
-        Turret();
+        Turret(bool exists);
         void updateBullet();
         void resetBullet();
 };
