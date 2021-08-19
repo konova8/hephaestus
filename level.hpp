@@ -13,13 +13,15 @@
 class Level
 {
     protected:
-        Platform platforms[N_PLATFORMS];
-        Enemy enemies[N_ENEMIES];
-        Turret turrets[N_TURRETS];
-        Bonus bonuses[N_BONUSES];
+        Platform *platforms[N_PLATFORMS];
+        Enemy *enemies[N_ENEMIES];
+        Turret *turrets[N_TURRETS];
+        Bonus *bonuses[N_BONUSES];
         int updateCounter;
         int turretUpdateTime;
         int enemiesUpdateTime;
+        int width;
+        int height;
         void isMoveLegal(Player player, int keyPressed);
         void isAlive(int x, int y);
     public:

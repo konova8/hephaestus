@@ -2,17 +2,11 @@
 #define ENEMY
 #include "level.hpp"
 
-class Enemy
+class Enemy : public Bullet
 {
-    protected:
-        int x;
-        int y;
-        int damage;
-        char direction;
     public:
-        Enemy(Level level);
-        void move(Level level);
-        void kill();
+        Enemy(int x, int y, int damage, int direction, char symbol);
+        void hitPlayer();
         void reverseDir();
 
 };
