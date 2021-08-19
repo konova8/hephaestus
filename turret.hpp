@@ -8,9 +8,10 @@ class Turret
         int x;
         int y;
         Bullet bullet;
-    Turret();
-    void updateBullet();
-    void resetBullet();
+    public:
+        Turret();
+        void updateBullet();
+        void resetBullet();
 };
 
 #endif
