@@ -21,14 +21,21 @@ class Level
         int turretUpdateTime;
         int enemiesUpdateTime;
         int width;
-        int height;
-        void isMoveLegal(Player player, int keyPressed);
+        bool isPlayerMoveLegal(Player player, int keyPressed);
+        bool isEnemyMoveLegal(Enemy *enemy);
         void isAlive(int x, int y);
+        void drawBorders();
+        void setPlatforms(int index);
+        void setTurrets(int index);
+        void setEnemies(int index);
+        void setBonuses(int index);
     public:
         Level(int index);
         void drawLevel();
         void updateLevel();
         void exitLevel();
+        bool isPlayerUnderPlatform(Player player);
+        int height;
         
 };
 

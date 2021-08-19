@@ -1,13 +1,16 @@
 #ifndef ENEMY
 #define ENEMY
-#include "level.hpp"
+#include "bullet.hpp"
 
 class Enemy : public Bullet
 {
+    protected:
+        bool alive;
     public:
         Enemy(int x, int y, int damage, int direction, char symbol);
         void hitPlayer();
-        void reverseDir();
+        void reverseDirection();
+        bool isAlive();
 
 };
 

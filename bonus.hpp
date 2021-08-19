@@ -1,6 +1,5 @@
 #ifndef BONUS
 #define BONUS
-#include "level.hpp"
 
 class Bonus
 {
@@ -9,8 +8,11 @@ class Bonus
         char bonusType;
         int x;
         int y;
-    Bonus(Level currentLevel);
-    void remove();
+        bool used;
+    public:
+        Bonus(int x, int y, char symbol, char bonusType);
+        bool isUsed();
+        void use();
 };
 
 #endif
