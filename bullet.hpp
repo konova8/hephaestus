@@ -10,7 +10,8 @@ class Bullet {
         char symbol;
     public:
         Bullet(int x, int y, int damage, int direction, char symbol);
-        void move(Level level);
+        void move();
+        void hitPlayer();
         void print();
         
 };
