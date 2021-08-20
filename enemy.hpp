@@ -7,10 +7,11 @@ class Enemy : public Bullet
     protected:
         bool alive;
     public:
-        Enemy(int x, int y, int damage, int direction, char symbol);
+        Enemy(int x, int y, int damage, int direction, char symbol, bool alive);
         void hitPlayer();
         void reverseDirection();
         bool isAlive();
+        int getX();
 
 };
 

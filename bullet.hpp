@@ -1,19 +1,16 @@
 #ifndef BULLET
 #define BULLET
+#include "singleBlockEntity.hpp"
 
-class Bullet {
+class Bullet : public SingleBlockEntity
+{
     protected:
-        int x;
-        int y;
         int damage;
         int direction;
-        char symbol;
     public:
+        Bullet();
         Bullet(int x, int y, int damage, int direction, char symbol);
-        void move();
         void hitPlayer();
-        void print();
-        
 };
 
 #endif

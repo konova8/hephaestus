@@ -1,19 +1,16 @@
 #ifndef TURRET
 #define TURRET
+#include "singleBlockEntity.hpp"
 #include "bullet.hpp"
 
-class Turret
+class Turret : public SingleBlockEntity
 {
     protected:
-        int x;
-        int y;
-        bool status;
         Bullet bullet;
     public:
         Turret(bool exists);
         void updateBullet();
         void resetBullet();
-        bool getStatus();
 };
 
 #endif
