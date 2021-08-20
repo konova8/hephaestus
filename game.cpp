@@ -2,7 +2,7 @@
 #include <ncurses.h>
 #include <cstdlib>
 #include "level.hpp"
-#include "enemy.hpp"
+#include "player.hpp"
 #include <unistd.h>
 
 using namespace std;
@@ -20,5 +20,5 @@ struct mapNode {
 };
 
 int main() {
-    
+
 }

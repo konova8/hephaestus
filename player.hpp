@@ -8,7 +8,7 @@ class Player : public SingleBlockEntity
         int health;
         int points;
     public:
-        Player(int x, int y);
+        Player(int x, int y, char symbol, int health = 100, int points = 0);
         int getXAfterMove(int keyPressed);
         int getYAfterMove(int keyPressed);
         void keyMove(int keyPressed);
@@ -16,6 +16,8 @@ class Player : public SingleBlockEntity
         void addHealth(int hpsToBeAdded);
         void removePoints(int pointsToBeRemoved);
         void addPoints(int pointsToBeAdded);
+        int getHealth();
+        int getPoints();
 };
 
 #endif
