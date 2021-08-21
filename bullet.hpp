@@ -10,7 +10,7 @@ class Bullet : public SingleBlockEntity
         int direction;
     public:
         Bullet(int x, int y, int damage, int direction, char symbol);
-        void hitPlayer(Player &player); //Removes this->damage health from Player
+        void hitPlayer(Player *player); //Removes this->damage health from Player
 };
 
 #endif

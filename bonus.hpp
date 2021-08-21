@@ -10,7 +10,7 @@ class Bonus : public SingleBlockEntity
         int bonusEffect;
     public:
         Bonus(int x, int y, char symbol, char bonusType, int bonusEffect); //Constructor, if in doubt look at Bullet::Bullet and/or university slides
-        void use(Player &player); //If health bonus add bonusEffect to health, if point bonus add bonusEffect to points
+        void use(Player *player); //If health bonus add bonusEffect to health, if point bonus add bonusEffect to points
         
 };
 
