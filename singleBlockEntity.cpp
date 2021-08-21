@@ -1,25 +1,18 @@
 #include <ncurses.h>
 #include "singleBlockEntity.hpp"
 
-SingleBlockEntity::SingleBlockEntity()
-{
-    this->x = 0;
-    this->y = 0;
-    this-> exists = true;
-}
-
 SingleBlockEntity::SingleBlockEntity(int x, int y, bool exists, char symbol)
 {
     this->x = x;
     this->y = y;
-    this-> exists = exists;
+    this->exists = exists;
     this->symbol = symbol;
 }
 
 void SingleBlockEntity::move(int moveX, int moveY)
 {
-    this->x += x;
-    this->y += y;
+    this->x += moveX;
+    this->y += moveY;
 }
 
 bool SingleBlockEntity::getExistence()
