@@ -9,14 +9,14 @@ class Player : public SingleBlockEntity
         int points;
     public:
         Player(int x, int y, char symbol, int health = 100, int points = 0);
-        int getXAfterMove(int keyPressed);
-        int getYAfterMove(int keyPressed);
-        void keyMove(int keyPressed);
-        void removeHealth(int hpsToBeRemoved);
-        void addHealth(int hpsToBeAdded);
-        void removePoints(int pointsToBeRemoved);
-        void addPoints(int pointsToBeAdded);
-        int getHealth();
+        int getXAfterMove(int keyPressed); //Returns the x after the key pressed
+        int getYAfterMove(int keyPressed); //Returns the y after the key pressed
+        void move(int keyPressed); //Moves based on the key pressed, use SingleBlockEntity::move
+        void removeHealth(int hpsToBeRemoved); //Self explanatory
+        void addHealth(int hpsToBeAdded); //Self explanatory
+        void removePoints(int pointsToBeRemoved); //Self explanatory
+        void addPoints(int pointsToBeAdded); //Self explanatory
+        int getHealth(); 
         int getPoints();
 };
 

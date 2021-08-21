@@ -35,7 +35,7 @@ class Level
         void drawLevel();
         void updateLevel();
         void exitLevel();
-        void checkCollisions(Player &player);
+        void playerUpdate(Player &player, int move);
         bool isPlayerUnderPlatform(Player player);
         
 };

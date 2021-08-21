@@ -1,6 +1,7 @@
 #ifndef BULLET
 #define BULLET
 #include "singleBlockEntity.hpp"
+#include "player.hpp"
 
 class Bullet : public SingleBlockEntity
 {
@@ -8,9 +9,8 @@ class Bullet : public SingleBlockEntity
         int damage;
         int direction;
     public:
-        Bullet();
         Bullet(int x, int y, int damage, int direction, char symbol);
-        void hitPlayer();
+        void hitPlayer(Player &player); //Removes this->damage health from Player
 };
 
 #endif

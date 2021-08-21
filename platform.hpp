@@ -9,8 +9,8 @@ class Platform
         char symbol;
         int y;
     public:
-        Platform(int startingPointX, int endingPointX, int y, char symbol);
-        bool isPositionOnPlatform(int x, int y);
+        Platform(int startingPointX, int endingPointX, int y, char symbol); //Constructor
+        bool isEntityUnderPlatform(int y); //Returns true if y is *one single block* under the platform
 };
 
 #endif

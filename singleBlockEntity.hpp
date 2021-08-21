@@ -9,8 +9,7 @@ class SingleBlockEntity
         bool exists;
         char symbol;
     public:
-        SingleBlockEntity();
-        SingleBlockEntity(int x, int y, bool exists, char symbol);
+        SingleBlockEntity(int x = -1, int y = -1, bool exists = true, char symbol = ' ');
         void move(int moveX, int moveY);
         bool getExistence();
         void deactivate();
