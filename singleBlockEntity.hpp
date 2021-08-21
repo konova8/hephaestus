@@ -10,10 +10,12 @@ class SingleBlockEntity
         char symbol;
     public:
         SingleBlockEntity(int x = -1, int y = -1, bool exists = true, char symbol = ' ');
-        void move(int moveX, int moveY);
+        int getX();
+        int getY();
         bool getExistence();
-        void deactivate();
         void print();
+        void move(int moveX, int moveY);
+        void deactivate();
 };
 
 #endif

@@ -9,10 +9,14 @@ SingleBlockEntity::SingleBlockEntity(int x, int y, bool exists, char symbol)
     this->symbol = symbol;
 }
 
-void SingleBlockEntity::move(int moveX, int moveY)
+int SingleBlockEntity::getX()
 {
-    this->x += moveX;
-    this->y += moveY;
+    return this->x;
+}
+
+int SingleBlockEntity::getY()
+{
+    return this->y;
 }
 
 bool SingleBlockEntity::getExistence()
@@ -20,12 +24,18 @@ bool SingleBlockEntity::getExistence()
     return this->exists;
 }
 
-void SingleBlockEntity::deactivate()
-{
-    this->exists = false;
-}
-
 void SingleBlockEntity::print()
 {
     mvaddch(this->y, this->x, this->symbol);
+}
+
+void SingleBlockEntity::move(int moveX, int moveY)
+{
+    this->x += moveX;
+    this->y += moveY;
+}
+
+void SingleBlockEntity::deactivate()
+{
+    this->exists = false;
 }
