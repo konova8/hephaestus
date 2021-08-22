@@ -21,7 +21,7 @@ int Player::getPoints()
 }
 
 void Player::move(int keyPressed){
-    if (keyPressed == 'a' || keyPressed == 'A' || keyPressed == KEY_LEFT){
+    if (keyPressed == 'a' || keyPressed == 'A' || keyPressed == KEY_LEFT){  //@OmegaChronos dove vengono definite le costanti delle arrow keys?
         SingleBlockEntity::move(-1, 0);
     }
     else if (keyPressed == 's' || keyPressed == 'S' || keyPressed == KEY_DOWN){
@@ -34,3 +34,34 @@ void Player::move(int keyPressed){
         SingleBlockEntity::move(1, 0);
     }
 }
+
+int getXAfterMove(int keyPressed){
+    if (keyPressed == 'a' || keyPressed == 'A' || keyPressed == KEY_LEFT){  //@OmegaChronos dove vengono definite le costanti delle arrow keys?
+        
+    }
+    else if (keyPressed == 's' || keyPressed == 'S' || keyPressed == KEY_DOWN){
+        
+    }
+    if (keyPressed == 'W' || keyPressed == 'w' || keyPressed == KEY_UP){
+
+    }
+    if (keyPressed == 'd' || keyPressed == 'D' || keyPressed == KEY_RIGHT){
+
+    }
+}
+
+int getYAfterMove(int keyPressed){
+    if (keyPressed == 'a' || keyPressed == 'A' || keyPressed == KEY_LEFT){  //@OmegaChronos dove vengono definite le costanti delle arrow keys?
+        
+    }
+    else if (keyPressed == 's' || keyPressed == 'S' || keyPressed == KEY_DOWN){
+
+    }
+    if (keyPressed == 'W' || keyPressed == 'w' || keyPressed == KEY_UP){
+
+    }
+    if (keyPressed == 'd' || keyPressed == 'D' || keyPressed == KEY_RIGHT){
+
+    }
+}
+
