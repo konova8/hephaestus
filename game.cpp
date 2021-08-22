@@ -9,15 +9,28 @@ using namespace std;
 
 struct mapNode {
     int index;
-    mapNode *prev = NULL;
-    Level currentLevel = index; //??????????????????
-    mapNode *next = NULL;
-    mapNode(int Index)
+    mapNode *prev;
+    Level currentLevel;
+    mapNode *next;
+    mapNode(int index, mapNode *previousNode = NULL)
     {
-        index = Index;
-        currentLevel = Index; //??????????????????
+        this->index = index;
+        this->prev = previousNode;
+        this->currentLevel = Level(index);
+        this->next = NULL;
     }
 };
+
+mapNode *newNode(mapNode *currentNode)
+{
+    mapNode *newNode = new mapNode(currentNode->index + 1, currentNode);
+    return newNode;
+}
+
+void printProps(mapNode *m) //Testing purposes, will be removed before merge
+{
+    cout << "---------\nINDEX: " << m->index << "\tPREV: " << m->prev << "\tNEXT: " << m->next << "\n---------" << endl;
+}
 
 int main() {
 
