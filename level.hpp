@@ -1,5 +1,6 @@
 #ifndef LEVEL
 #define LEVEL
+
 #include "player.hpp"
 #include "bonus.hpp"
 #include "enemy.hpp"
@@ -31,6 +32,7 @@ class Level
         updateData enemiesUpdate;
         int width;
         int height;
+        int randomInRange(int min, int max);
         bool isPlayerMoveLegal(Player player, int keyPressed);
         bool isEnemyMoveLegal(Enemy *enemy);
         void isAlive(int x, int y);
