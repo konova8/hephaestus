@@ -13,13 +13,22 @@
 class Level
 {
     protected:
+        struct updateData
+        {
+            int updateCounter;
+            int updateTime;
+            updateData(int updateTime = 15)
+            {
+                this->updateCounter = 0;
+                this->updateTime = updateTime;
+            }
+        };
         Platform *platforms[N_PLATFORMS];
         Enemy *enemies[N_ENEMIES];
         Turret *turrets[N_TURRETS];
         Bonus *bonuses[N_BONUSES];
-        int updateCounter;
-        int turretUpdateTime;
-        int enemiesUpdateTime;
+        updateData turretsUpdate;
+        updateData enemiesUpdate;
         int width;
         int height;
         bool isPlayerMoveLegal(Player player, int keyPressed);
@@ -37,6 +46,7 @@ class Level
         void exitLevel();
         void playerUpdate(Player *player, int move);
         bool isPlayerUnderPlatform(Player player);
+        int isPlayerAtBorder(); //Returns -1 if player is at left border, 1 if player is at right border, 0 if it is not at any border
         
 };
 
