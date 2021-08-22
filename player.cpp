@@ -35,7 +35,7 @@ void Player::move(int keyPressed){
     }
 }
 
-int getXAfterMove(int keyPressed){
+int Player::getXAfterMove(int keyPressed){
     if (keyPressed == 'a' || keyPressed == 'A' || keyPressed == KEY_LEFT){  //@OmegaChronos dove vengono definite le costanti delle arrow keys?
         
     }
@@ -50,7 +50,7 @@ int getXAfterMove(int keyPressed){
     }
 }
 
-int getYAfterMove(int keyPressed){
+int Player::getYAfterMove(int keyPressed){
     if (keyPressed == 'a' || keyPressed == 'A' || keyPressed == KEY_LEFT){  //@OmegaChronos dove vengono definite le costanti delle arrow keys?
         
     }
