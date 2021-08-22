@@ -30,7 +30,6 @@ void Level::setPlatforms(int index)
         }
         else
         {
-            std::cout << abs(endingX - startingX + 1) << std::endl;
             if(endingX < startingX)
             {
                 startingX = randomInRange(0, startingX - endingX) + endingX;
