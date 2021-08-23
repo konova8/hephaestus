@@ -10,3 +10,6 @@ int Bullet::getDirection()
 {
     return this->direction;
 }
+void Bullet::hitPlayer(Player *player){
+
+}
