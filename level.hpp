@@ -40,12 +40,12 @@ class Level
         void initializeEntitiesLists();
         bool isPlayerMoveLegal(Player player, int keyPressed);
         bool isEnemyMoveLegal(Enemy *enemy);
-        void drawBorders();
+        void drawBorders(int index);
         void setPlatforms(int index);
         void setEntities(int index);
     public:
         Level(int index);
-        void drawLevel(Player player);
+        void drawLevel(Player player, int index);
         void updateLevel();
         void exitLevel();
         void playerUpdate(Player *player, int move);

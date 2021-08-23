@@ -41,17 +41,30 @@ void Level::initializeEntitiesLists()
     }
 }
 
-void Level::drawBorders()
+void Level::drawBorders(int index)
 {
     for(int i = 1; i < this->width; i++)
     {
         mvaddch(0, i, '-');
-        mvaddch(height, i, '-');
+        mvaddch(this->height, i, '-');
     }
     for(int i = 0; i <= this->height; i++)
     {
-        mvaddch(i, 0, '|');
-        mvaddch(i, width, '|');
+        if(i == this->height - 1 && index != 0)
+        {
+            mvaddch(i, 0, '[');
+            mvaddch(i, this->width, ']');
+        }
+        else if(i == this->height - 1)
+        {
+            mvaddch(i, 0, '|');
+            mvaddch(i, this->width, ']');
+        }
+        else
+        {
+            mvaddch(i, 0, '|');
+            mvaddch(i, this->width, '|');
+        }
     }
 }
 
@@ -141,15 +154,15 @@ void Level::setEntities(int index)
     }
 }
 
-void Level::drawLevel(Player player)
+void Level::drawLevel(Player player, int index)
 {
     char spaces[100] = "";
     for(int i = 0; i < width + 1; i++)
     {
         strcat(spaces, " ");
     }
-    printw("%sPoints: %d\n%s Health: %d", spaces, player.getPoints(), spaces, player.getHealth());
-    drawBorders();
+    printw("%sPoints: %d\n%sHealth: %d", spaces, player.getPoints(), spaces, player.getHealth());
+    drawBorders(index);
     // for(int i = 0; i < N_PLATFORMS && platforms[i] != NULL; i++)
     // {
     //     //platforms[i]->print();
@@ -173,6 +186,6 @@ void Level::updateLevel()
 {
     for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++)
     {
-        turrets[i]->updateBullet(1, width - 1);
+        //turrets[i]->updateBullet(1, width - 1);
     }
 }
