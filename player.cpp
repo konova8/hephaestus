@@ -57,3 +57,10 @@ int Player::getYAfterMove(int keyPressed){
     return(tmp);
 }
 
+void Player::healthChange(int change){
+    this->health + change;
+}
+
+void Player::pointsChange(int change){
+    this->points + change;
+}
