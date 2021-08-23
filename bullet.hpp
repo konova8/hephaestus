@@ -11,6 +11,7 @@ class Bullet : public SingleBlockEntity
     public:
         Bullet(int x, int y, int damage, int direction, char symbol);
         void hitPlayer(Player *player); //Removes this->damage health from Player
+        int getDirection();
 };
 
 #endif
