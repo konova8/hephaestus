@@ -5,3 +5,7 @@ Bullet::Bullet(int x, int y, int damage, int direction, char symbol) : SingleBlo
     this->damage = damage;
     this->direction = direction;
 }
+
+void Bullet::hitPlayer(Player *player){
+
+}
