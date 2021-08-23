@@ -173,6 +173,6 @@ void Level::updateLevel()
 {
     for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++)
     {
-
+        turrets[i]->updateBullet(1, width - 1);
     }
 }
