@@ -2,6 +2,7 @@
 #include <iostream> //Testing purposes, will remove later
 #include <cstdlib>
 #include <ncurses.h>
+#include <string.h>
 
 Level::Level(int index)
 {
@@ -142,6 +143,12 @@ void Level::setEntities(int index)
 
 void Level::drawLevel(Player player)
 {
+    char spaces[100] = "";
+    for(int i = 0; i < width + 1; i++)
+    {
+        strcat(spaces, " ");
+    }
+    printw("%sPoints: %d\n%s Health: %d", spaces, player.getPoints(), spaces, player.getHealth());
     drawBorders();
     // for(int i = 0; i < N_PLATFORMS && platforms[i] != NULL; i++)
     // {
@@ -160,4 +167,12 @@ void Level::drawLevel(Player player)
     //     bonuses[i]->print();
     // }
     // player.print();
+}
+
+void Level::updateLevel()
+{
+    for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++)
+    {
+
+    }
 }

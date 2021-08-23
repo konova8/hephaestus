@@ -49,9 +49,7 @@ class Level
         void updateLevel();
         void exitLevel();
         void playerUpdate(Player *player, int move);
-        bool isPlayerUnderPlatform(Player player);
         int isPlayerAtBorder(); //Returns -1 if player is at left border, 1 if player is at right border, 0 if it is not at any border
-        void resetTemporaries();
         
 };
 
