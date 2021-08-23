@@ -1,6 +1,7 @@
 #ifndef PLAYER
 #define PLAYER
 #include "singleBlockEntity.hpp"
+#include <ncurses.h>
 
 class Player : public SingleBlockEntity
 {
