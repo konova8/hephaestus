@@ -21,14 +21,14 @@ int Player::getPoints()
 }
 
 void Player::move(int keyPressed){
-    if (keyPressed == 'a' || keyPressed == 'A' || keyPressed == KEY_LEFT){  //@OmegaChronos dove vengono definite le costanti delle arrow keys?
+    if (keyPressed == 'a' || keyPressed == 'A' || keyPressed == KEY_LEFT){  
         SingleBlockEntity::move(-1, 0);
     }
     else if (keyPressed == 's' || keyPressed == 'S' || keyPressed == KEY_DOWN){
-        SingleBlockEntity::move(0, -1);
+        SingleBlockEntity::move(0, 1);
     }
     if (keyPressed == 'W' || keyPressed == 'w' || keyPressed == KEY_UP){
-        SingleBlockEntity::move(0, 1);
+        SingleBlockEntity::move(0, -1);
     }
     if (keyPressed == 'd' || keyPressed == 'D' || keyPressed == KEY_RIGHT){
         SingleBlockEntity::move(1, 0);
@@ -36,32 +36,24 @@ void Player::move(int keyPressed){
 }
 
 int Player::getXAfterMove(int keyPressed){
-    if (keyPressed == 'a' || keyPressed == 'A' || keyPressed == KEY_LEFT){  //@OmegaChronos dove vengono definite le costanti delle arrow keys?
-        
+    int tmp = 0;
+    if (keyPressed == 'a' || keyPressed == 'A' || keyPressed == KEY_LEFT){ 
+        tmp = SingleBlockEntity::getX() - 1;
     }
-    else if (keyPressed == 's' || keyPressed == 'S' || keyPressed == KEY_DOWN){
-        
+    else if (keyPressed == 'd' || keyPressed == 'D' || keyPressed == KEY_RIGHT){
+        tmp = SingleBlockEntity::getX() + 1;
     }
-    if (keyPressed == 'W' || keyPressed == 'w' || keyPressed == KEY_UP){
-
-    }
-    if (keyPressed == 'd' || keyPressed == 'D' || keyPressed == KEY_RIGHT){
-
-    }
+    return(tmp);
 }
 
 int Player::getYAfterMove(int keyPressed){
-    if (keyPressed == 'a' || keyPressed == 'A' || keyPressed == KEY_LEFT){  //@OmegaChronos dove vengono definite le costanti delle arrow keys?
-        
+    int tmp = 0;
+    if (keyPressed == 's' || keyPressed == 'S' || keyPressed == KEY_DOWN){
+        tmp = SingleBlockEntity::getY() + 1;
     }
-    else if (keyPressed == 's' || keyPressed == 'S' || keyPressed == KEY_DOWN){
-
+    else if (keyPressed == 'W' || keyPressed == 'w' || keyPressed == KEY_UP){
+        tmp = SingleBlockEntity::getY() - 1;
     }
-    if (keyPressed == 'W' || keyPressed == 'w' || keyPressed == KEY_UP){
-
-    }
-    if (keyPressed == 'd' || keyPressed == 'D' || keyPressed == KEY_RIGHT){
-
-    }
+    return(tmp);
 }
 
