@@ -10,6 +10,10 @@
 #define N_ENEMIES 4
 #define N_TURRETS 3
 #define N_BONUSES 2
+#define MIN_DAMAGE 10
+#define MAX_DAMAGE 100
+#define MAX_HEALTHBONUS 50
+#define MIN_UPDATE 3
 
 class Level
 {
@@ -33,22 +37,21 @@ class Level
         int width;
         int height;
         int randomInRange(int min, int max);
+        void initializeEntitiesLists();
         bool isPlayerMoveLegal(Player player, int keyPressed);
         bool isEnemyMoveLegal(Enemy *enemy);
-        void isAlive(int x, int y);
         void drawBorders();
         void setPlatforms(int index);
-        void setTurrets(int index);
-        void setEnemies(int index);
-        void setBonuses(int index);
+        void setEntities(int index);
     public:
         Level(int index);
-        void drawLevel();
+        void drawLevel(Player player);
         void updateLevel();
         void exitLevel();
         void playerUpdate(Player *player, int move);
         bool isPlayerUnderPlatform(Player player);
         int isPlayerAtBorder(); //Returns -1 if player is at left border, 1 if player is at right border, 0 if it is not at any border
+        void resetTemporaries();
         
 };
 
