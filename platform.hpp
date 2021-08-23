@@ -11,6 +11,9 @@ class Platform
     public:
         Platform(int startingPointX, int endingPointX, int y, char symbol); //Constructor
         bool isEntityUnderPlatform(int y); //Returns true if y is *one single block* under the platform
+        int getStartingPointX();
+        int getEndingPointX();
+        int getY();
 };
 
 #endif
