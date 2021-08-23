@@ -12,6 +12,11 @@ int Platform::getY(){
     return(this->y);
 }
 
-bool Platform::isEntityUnderPlatform(int y){
-    
+bool Platform::isEntityUnderPlatform(int entit_y){
+    bool check = false;
+    int platform_y = getY();
+    if (platform_y - entit_y == 1){
+        check = true;
+    }
+    return check;
 }
