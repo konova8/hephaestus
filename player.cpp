@@ -58,9 +58,9 @@ int Player::getYAfterMove(int keyPressed){
 }
 
 void Player::healthChange(int change){
-    this->health + change;
+    this->health += change;
 }
 
 void Player::pointsChange(int change){
-    this->points + change;
+    this->points += change;
 }
