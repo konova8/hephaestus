@@ -163,23 +163,23 @@ void Level::drawLevel(Player player, int index)
     }
     printw("%sPoints: %d\n%sHealth: %d", spaces, player.getPoints(), spaces, player.getHealth());
     drawBorders(index);
-    // for(int i = 0; i < N_PLATFORMS && platforms[i] != NULL; i++)
-    // {
-    //     //platforms[i]->print();
-    // }
-    // for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++)
-    // {
-    //     turrets[i]->print();
-    // }
-    // for(int i = 0; i < N_ENEMIES; i++)
-    // {
-    //     enemies[i]->print();
-    // }
-    // for(int i = 0; N_BONUSES; i++)
-    // {
-    //     bonuses[i]->print();
-    // }
-    // player.print();
+    for(int i = 0; i < N_PLATFORMS && platforms[i] != NULL; i++)
+    {
+        //platforms[i]->print();
+    }
+    for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++)
+    {
+        turrets[i]->print();
+    }
+    for(int i = 0; i < N_ENEMIES; i++)
+    {
+        enemies[i]->print();
+    }
+    for(int i = 0; N_BONUSES; i++)
+    {
+        bonuses[i]->print();
+    }
+    player.print();
 }
 
 void Level::updateLevel()
@@ -190,7 +190,7 @@ void Level::updateLevel()
     }
     for(int i = 0; i < N_ENEMIES && enemies[i] != NULL; i++)
     {
-        if(platforms[i]->getStartingPointX() >= enemies[i]->getX() || platforms[i]->getEndingPointY() <= enemies[i]->getY())
+        if(platforms[i]->getStartingPointX() >= enemies[i]->getX() || platforms[i]->getEndingPointX() <= enemies[i]->getX())
         {
             enemies[i]->reverseDirection();
         }
