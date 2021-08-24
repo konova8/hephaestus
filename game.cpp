@@ -20,5 +20,9 @@ struct mapNode {
 };
 
 int main() {
-
+    Level myLevel(2);
+    Player myPlayer(15, 15, '$');
+    initscr();
+    getch();
+    endwin();
 }
