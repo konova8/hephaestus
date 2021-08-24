@@ -121,11 +121,11 @@ void Level::setEntities(int index)
         {
             if(randomInRange(1, 5) > 5)
             {
-                //turrets[turretsBuilt] = new Turret(1, platforms[i]->getY(), true, '>');
+                turrets[turretsBuilt] = new Turret(1, platforms[i]->getY(), true, '>');
             }
             else
             {
-                //turrets[turretsBuilt] = new Turret(this->width - 1, platforms[i]->getY(), true, '<');
+                turrets[turretsBuilt] = new Turret(this->width - 1, platforms[i]->getY(), true, '<');
             }
             turretsToBeBuilt--;
             turretsBuilt++;
@@ -133,7 +133,7 @@ void Level::setEntities(int index)
         if((allEnemies && currentPlatforms - i <= enemiesToBeSpawned) || (allEnemies && currentPlatforms - i > enemiesToBeSpawned && randomInRange(1, 10) > 3 || !allEnemies))
         {
             int enemiesDirection = randomInRange(1, 10) > 5 ? 1 : -1;
-            //enemies[enemiesSpawned] = new Enemy(randomInRange(platforms[i]->getStartingPointX(), platforms[i]->getEndingPointX()), platforms[i]->getY(), enemiesDamage, enemiesDirection);
+            enemies[enemiesSpawned] = new Enemy(randomInRange(platforms[i]->getStartingPointX(), platforms[i]->getEndingPointX()), platforms[i]->getY(), enemiesDamage, enemiesDirection, '@');
             enemiesToBeSpawned--;
             enemiesSpawned++;
         }
@@ -149,7 +149,7 @@ void Level::setEntities(int index)
             {
                 bonusEffect = index / 3;
             }
-            //bonuses[bonusesSpawned] = new Bonus(randomInRange(platforms[i]->getStartingX(), platforms[i]->getEndingX()), platofrms[i]->getY(), bonusType, bonusEffect);
+            bonuses[bonusesSpawned] = new Bonus(randomInRange(platforms[i]->getStartingPointX(), platforms[i]->getEndingPointX()), platforms[i]->getY(), bonusType, bonusEffect);
         }
     }
 }
@@ -165,7 +165,7 @@ void Level::drawLevel(Player player, int index)
     drawBorders(index);
     for(int i = 0; i < N_PLATFORMS && platforms[i] != NULL; i++)
     {
-        //platforms[i]->print();
+        platforms[i]->print();
     }
     for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++)
     {
@@ -186,7 +186,7 @@ void Level::updateLevel()
 {
     for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++)
     {
-        //turrets[i]->updateBullet(1, width - 1);
+        turrets[i]->updateBullet(1, width - 1);
     }
     for(int i = 0; i < N_ENEMIES && enemies[i] != NULL; i++)
     {
