@@ -9,10 +9,11 @@ class Bullet : public SingleBlockEntity
         int damage;
         int direction;
     public:
-        Bullet(int x = -1, int y = -1, int damage = 10, int direction = 1, char symbol = '*');
+        Bullet(int x = -1, int y = -1, int direction = 1, int damage = 10, char symbol = '*');
         void hitPlayer(Player *player); //Removes this->damage health from Player
         int getDirection();
         void move(); //moves x of bullet to the this->direction by one single block
+        void reversemove();
 };
 
 #endif

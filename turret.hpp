@@ -9,7 +9,7 @@ class Turret : public SingleBlockEntity
         Bullet bullet;
     public:
         using SingleBlockEntity::SingleBlockEntity;
-        void updateBullet(int xLeft, int xRight); //Moves bullet to appropriate direction (determined based on this->x, turrets with this->x = xLeft are on the left, this->x = xRight are on the right, use SingleBlockEntity::move). also, if it is at the corresponding border, reset the bullet position
+        void updateBullet(); //Moves the bullet
         void resetBullet(); //Brings the bullet back to the turret position
 };
 
