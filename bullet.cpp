@@ -13,3 +13,8 @@ int Bullet::getDirection()
 void Bullet::hitPlayer(Player *player){
 
 }
+
+void Bullet::move()
+{
+    
+}
