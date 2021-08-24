@@ -15,3 +15,8 @@ int Platform::getY(){
 bool Platform::isEntityUnderPlatform(int entit_y){
     return (getY() - 1 == entit_y);
 }
+
+void Platform::print()
+{
+    
+}

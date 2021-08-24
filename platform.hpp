@@ -14,6 +14,7 @@ class Platform
         int getStartingPointX();
         int getEndingPointX();
         int getY();
+        void print();
 };
 
 #endif
