@@ -154,6 +154,16 @@ void Level::setEntities(int index)
     }
 }
 
+int Level::getWidth()
+{
+    return this->width;
+}
+
+int Level::getHeight()
+{
+    return this->height;
+}
+
 void Level::drawLevel(Player player, int index)
 {
     char spaces[100] = "";
@@ -209,8 +219,9 @@ void Level::exitLevel()
     }
 }
 
-void Level::playerUpdate(Player *player, int move)
+void Level::playerUpdate(Player *player, int keyPressed)
 {
+    bool changedPlatform; //Useful for enemy kill
     //determine what platform the player is on
     int heightIndex = this->height - 1, platformIndex = -1;
     while(player->getY() != heightIndex)
@@ -218,10 +229,16 @@ void Level::playerUpdate(Player *player, int move)
         heightIndex += 2;
         platformIndex++;
     }
-    if(platformIndex == -1)
+    if((keyPressed == 'w' || keyPressed == 'W' || keyPressed == KEY_UP) && platformIndex < N_PLATFORMS) //useless to check for new platforms if player is at the top
     {
-        
+        if(player->getX() >= platforms[platformIndex]->getStartingPointX() && player->getX() <= platforms[platformIndex] ->getEndingPointX())
+        {
+            player->move(keyPressed);
+            player->move(keyPressed);
+            changedPlatform = true;
+        }
     }
+    //Handle cases of bullet collision with move to right/left
     else
     {
 

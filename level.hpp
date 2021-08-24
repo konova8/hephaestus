@@ -44,10 +44,12 @@ class Level
         void setEntities(int index);
     public:
         Level(int index = 1);
+        int getWidth();
+        int getHeight();
         void drawLevel(Player player, int index);
         void updateLevel();
         void exitLevel();
-        void playerUpdate(Player *player, int move);
+        void playerUpdate(Player *player, int keyPressed);
         int isPlayerAtBorder(); //Returns -1 if player is at left border, 1 if player is at right border, 0 if it is not at any border
         
 };
