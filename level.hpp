@@ -39,7 +39,6 @@ class Level
         int randomInRange(int min, int max);
         void initializeEntitiesLists();
         bool isPlayerMoveLegal(Player player, int keyPressed);
-        bool isEnemyMoveLegal(Enemy *enemy);
         void drawBorders(int index);
         void setPlatforms(int index);
         void setEntities(int index);

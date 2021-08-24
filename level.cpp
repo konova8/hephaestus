@@ -50,7 +50,7 @@ void Level::drawBorders(int index)
     }
     for(int i = 0; i <= this->height; i++)
     {
-        if(i == this->height - 1 && index != 0)
+        if(i == this->height - 1 && index != 1)
         {
             mvaddch(i, 0, '[');
             mvaddch(i, this->width, ']');
@@ -188,4 +188,43 @@ void Level::updateLevel()
     {
         //turrets[i]->updateBullet(1, width - 1);
     }
+    for(int i = 0; i < N_ENEMIES && enemies[i] != NULL; i++)
+    {
+        if(platforms[i]->getStartingPointX() >= enemies[i]->getX() || platforms[i]->getEndingPointY() <= enemies[i]->getY())
+        {
+            enemies[i]->reverseDirection();
+        }
+        else
+        {
+            enemies[i]->move();
+        }
+    }
+}
+
+void Level::exitLevel()
+{
+    for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++)
+    {
+        turrets[i]->resetBullet();
+    }
+}
+
+void Level::playerUpdate(Player *player, int index)
+{
+    //determine what platform the player is on
+    int heightIndex = this->height - 1, platformIndex = -1;
+    while(player->getY() != heightIndex)
+    {
+        heightIndex += 2;
+        platformIndex++;
+    }
+    if(platformIndex == -1)
+    {
+        
+    }
+    else
+    {
+
+    }
+
 }
