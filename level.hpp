@@ -43,7 +43,7 @@ class Level
         void setPlatforms(int index);
         void setEntities(int index);
     public:
-        Level(int index);
+        Level(int index = 1);
         void drawLevel(Player player, int index);
         void updateLevel();
         void exitLevel();
