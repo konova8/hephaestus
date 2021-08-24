@@ -24,6 +24,16 @@ bool SingleBlockEntity::getExistence()
     return this->exists;
 }
 
+int SingleBlockEntity::getXAfterMove(int xChange)
+{
+    return this->x + xChange;
+}
+
+int SingleBlockEntity::getYAfterMove(int yChange)
+{
+    return this->y + yChange;
+}
+
 void SingleBlockEntity::print()
 {
     mvaddch(this->y, this->x, this->symbol);

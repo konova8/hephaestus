@@ -13,6 +13,8 @@ class SingleBlockEntity
         int getX();
         int getY();
         bool getExistence();
+        int getXAfterMove(int xChange);
+        int getYAfterMove(int yChange);
         void print();
         void move(int moveX, int moveY);
         void deactivate();
