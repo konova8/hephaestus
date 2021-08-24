@@ -209,7 +209,7 @@ void Level::exitLevel()
     }
 }
 
-void Level::playerUpdate(Player *player, int index)
+void Level::playerUpdate(Player *player, int move)
 {
     //determine what platform the player is on
     int heightIndex = this->height - 1, platformIndex = -1;
