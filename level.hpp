@@ -13,7 +13,8 @@
 #define MIN_DAMAGE 10
 #define MAX_DAMAGE 100
 #define MAX_HEALTHBONUS 50
-#define MIN_UPDATE 3
+#define MIN_BULLET_UPDATE 3
+#define MIN_ENEMY_UPDATE 2
 
 class Level
 {

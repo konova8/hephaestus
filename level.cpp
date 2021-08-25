@@ -8,7 +8,8 @@ Level::Level(int index)
 {
     this->width = 40;
     this->height = 15;
-    turretsUpdate.updateTime = 20 - index < MIN_UPDATE ? MIN_UPDATE : index - 20;
+    turretsUpdate.updateTime = 20 - index < MIN_BULLET_UPDATE ? MIN_BULLET_UPDATE : index - 20;
+    enemiesUpdate.updateTime = 20 - index < MIN_ENEMY_UPDATE ? MIN_ENEMY_UPDATE : index - 20;
     initializeEntitiesLists();
     setPlatforms(index);
     setEntities(index);
@@ -192,28 +193,53 @@ void Level::drawLevel(Player player, int index)
     player.print();
 }
 
-void Level::updateLevel() //control time
+void Level::updateLevel()
 {
-    for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++)
+    bool turretsUpdated = false, enemiesUpdated = false;
+    if(turretsUpdate.updateCounter % turretsUpdate.updateTime == 0)
     {
-        turrets[i]->updateBullet();
+        for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++)
+        {
+            turrets[i]->updateBullet();
+        }
+        turretsUpdate = true;
     }
-    int correspondingPlatformIndex;
-    for(int i = 0; i < N_ENEMIES && enemies[i] != NULL; i++)
+    if(enemiesUpdate.updateCounter % enemiesUpdate.updateCounter == 0)
     {
-        correspondingPlatformIndex = 0;
-        while(correspondingPlatformIndex < N_PLATFORMS && platforms[i] != NULL && enemies[i]->getY() != platforms[correspondingPlatformIndex]->getY() + 1) //finds enemy's corresponding platform, possible function
+        int correspondingPlatformIndex;
+        for(int i = 0; i < N_ENEMIES && enemies[i] != NULL; i++)
         {
-            correspondingPlatformIndex++;
+            correspondingPlatformIndex = 0;
+            while(correspondingPlatformIndex < N_PLATFORMS && platforms[i] != NULL && enemies[i]->getY() != platforms[correspondingPlatformIndex]->getY() + 1) //finds enemy's corresponding platform, possible function
+            {
+                correspondingPlatformIndex++;
+            }
+            if(platforms[correspondingPlatformIndex]->getStartingPointX() >= enemies[i]->getX() || platforms[correspondingPlatformIndex]->getEndingPointX() <= enemies[i]->getX())
+            {
+                enemies[i]->reverseDirection();
+            }
+            else
+            {
+                enemies[i]->move();
+            }
         }
-        if(platforms[correspondingPlatformIndex]->getStartingPointX() >= enemies[i]->getX() || platforms[correspondingPlatformIndex]->getEndingPointX() <= enemies[i]->getX())
-        {
-            enemies[i]->reverseDirection();
-        }
-        else
-        {
-            enemies[i]->move();
-        }
+        enemiesUpdated = true;
+    }
+    if(turretsUpdated)
+    {
+        turretsUpdate.updateCounter = 0;
+    }
+    else
+    {
+        turretsUpdate.updateCounter++;
+    }
+    if(enemiesUpdated)
+    {
+        enemiesUpdate.updateCounter = 0;
+    }
+    else
+    {
+        enemiesUpdate.updateCounter++;
     }
 }
 
