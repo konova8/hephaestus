@@ -63,9 +63,10 @@ int convertMove(int keyPressed)
 }
 
 int main() {
-    Level myLevel(2);
-    Player myPlayer(15, 15, '$');
+    Player player(1, 1, '$');
     initscr();
-    getch();
+    noecho(); //Prevents the console form printing typed keys
+    nodelay(stdscr, true); //Makes getch() non blocking
+    keypad(stdscr, TRUE); //Allows use of arrow keys
     endwin();
 }
