@@ -20,3 +20,8 @@ void Bullet::move()
 {
     SingleBlockEntity::move(this->direction, 0);
 }
+
+bool Bullet::isColliding(SingleBlockEntity entity)
+{
+    return (this->x == entity.getX() && this->y == entity.getY());
+}
