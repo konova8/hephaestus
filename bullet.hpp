@@ -14,6 +14,7 @@ class Bullet : public SingleBlockEntity
         int getDirection();
         void move(); //moves x of bullet to the this->direction by one single block
         void reversemove();
+        bool isColliding(SingleBlockEntity entity);
 };
 
 #endif

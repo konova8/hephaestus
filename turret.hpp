@@ -11,6 +11,8 @@ class Turret : public SingleBlockEntity
         using SingleBlockEntity::SingleBlockEntity;
         void updateBullet(); //Moves the bullet
         void resetBullet(); //Brings the bullet back to the turret position
+        int getBulletDirection();
+        bool isBulletColliding(SingleBlockEntity entity);
 };
 
 #endif
