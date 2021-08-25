@@ -32,6 +32,36 @@ void printProps(mapNode *m) //Testing purposes, will be removed before merge
     cout << "---------\nINDEX: " << m->index << "\tPREV: " << m->prev << "\tNEXT: " << m->next << "\n---------" << endl;
 }
 
+int convertMove(int keyPressed)
+{
+    int newKeyPressed;
+    if(keyPressed == 'w' || keyPressed == 'W' || keyPressed == KEY_UP)
+    {
+        newKeyPressed = 'w';
+    }
+    else if(keyPressed == 's' || keyPressed == 'S' || keyPressed == KEY_DOWN)
+    {
+        newKeyPressed = 's';
+    }
+    else if(keyPressed == 'd' || keyPressed == 'd' || keyPressed == KEY_RIGHT)
+    {
+        newKeyPressed = 'd';
+    }
+    else if(keyPressed == 'a' || keyPressed == 'A' || keyPressed == KEY_LEFT)
+    {
+        newKeyPressed = 'a';
+    }
+    else if(keyPressed == 'q' || keyPressed == 'Q')
+    {
+        newKeyPressed = 'q';
+    }
+    else
+    {
+        newKeyPressed = ERR;
+    }
+    return newKeyPressed;
+}
+
 int main() {
     Level myLevel(2);
     Player myPlayer(15, 15, '$');
