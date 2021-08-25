@@ -34,6 +34,11 @@ int SingleBlockEntity::getYAfterMove(int yChange)
     return this->y + yChange;
 }
 
+bool SingleBlockEntity::isColliding(SingleBlockEntity entity)
+{
+    return (this->x == entity.getX() && this->y == entity.getY());
+}
+
 void SingleBlockEntity::print()
 {
     mvaddch(this->y, this->x, this->symbol);

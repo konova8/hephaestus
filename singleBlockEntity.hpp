@@ -15,9 +15,11 @@ class SingleBlockEntity
         bool getExistence();
         int getXAfterMove(int xChange);
         int getYAfterMove(int yChange);
+        bool isColliding(SingleBlockEntity entity);
         void print();
         void move(int moveX, int moveY);
         void deactivate();
+        
 };
 
 #endif
