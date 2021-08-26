@@ -82,13 +82,13 @@ void Level::setPlatforms(int index)
 {
     //cout << "SPBEG" << endl;
     int platformsToBuild = index > N_PLATFORMS ? N_PLATFORMS : index;
-    int startingX = -1, y = this->height - 2, endingX = -1;
+    int startingX = -1, y = this->height - 2, endingX = -1, minimumLength = 5; //minimumLength must not 
     //cout << "SP1, platformsToBuild: " << platformsToBuild << endl << "y: " << y << endl;
     for(int i = 0; i < platformsToBuild; i++)
     {
         if(i == 0)
         {
-            startingX = randomInRange(5, width - 5);
+            startingX = randomInRange(10, width - 10);
         }
         else
         {
@@ -107,7 +107,7 @@ void Level::setPlatforms(int index)
             //cout << "SPI1" << endl;
             do
             {
-                endingX = randomInRange(startingX, 35);
+                endingX = randomInRange(startingX, this->width - 5 - minimumLength) + minimumLength;
                 //cout << "CHOSEN ENDING X1: " << endingX << endl;
             }
             while(endingX == startingX);
@@ -117,7 +117,7 @@ void Level::setPlatforms(int index)
             //cout << "SPI2" << endl;
             do
             {
-                endingX = randomInRange(5, startingX);
+                endingX = randomInRange(5 + minimumLength, startingX) - minimumLength;
                 //cout << "CHOSEN ENDING X2: " << endingX << endl;
             }
             while(endingX == startingX);
