@@ -70,15 +70,17 @@ int main() {
     Level myLevel(testIndex);
     // int a;
     // cin >> a;
+    system("setterm -cursor off"); //Removes console cursor
     initscr();
     noecho(); //Prevents the console form printing typed keys
     //nodelay(stdscr, true); //Makes getch() non blocking
     keypad(stdscr, TRUE); //Allows use of arrow keys
-    while(true)
+    int k;
+    while(k != 'q')
     {
         clear();
         myLevel.drawLevel(player, testIndex);
-        int k = getch();
+        k = getch();
         if(k == 'd')
         {
             myLevel = Level(testIndex + 1);
@@ -91,4 +93,5 @@ int main() {
         }
     }
     endwin();
+    system("setterm -cursor on"); //Removes console cursor
 }
