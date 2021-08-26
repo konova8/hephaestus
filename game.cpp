@@ -63,10 +63,32 @@ int convertMove(int keyPressed)
 }
 
 int main() {
+    //EVERYTHING HERE IS FOR TESTING AT THE MOMENT,  REAL MAIN WILL BE IMPLEMENTED LATER
+    int testIndex = 1;
+    srand(time(0));
     Player player(1, 1, '$');
+    Level myLevel(testIndex);
+    int a;
+    cin >> a;
     initscr();
     noecho(); //Prevents the console form printing typed keys
-    nodelay(stdscr, true); //Makes getch() non blocking
+    //nodelay(stdscr, true); //Makes getch() non blocking
     keypad(stdscr, TRUE); //Allows use of arrow keys
+    while(true)
+    {
+        clear();
+        myLevel.drawLevel(player, testIndex);
+        int k = getch();
+        if(k == 'd')
+        {
+            myLevel = Level(testIndex + 1);
+            testIndex++;
+        }
+        else if(k == 'a' && testIndex > 1)
+        {
+            myLevel = Level(testIndex - 1);
+            testIndex--;
+        }
+    }
     endwin();
 }
