@@ -1,9 +1,9 @@
 #include "bullet.hpp"
 
-Bullet::Bullet(int x, int y, int direction, int damage, char symbol) : SingleBlockEntity(x, y, symbol)
+Bullet::Bullet(int x, int y, int direction, int damage, char symbol) : SingleBlockEntity(x, y, true, symbol)
 {
-    this->damage = damage;
     this->direction = direction; // 1 DX, -1 SX, non usare altri valori
+    this->damage = damage;
 }
 
 int Bullet::getDirection()
