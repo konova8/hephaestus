@@ -66,8 +66,8 @@ int main() {
     //EVERYTHING HERE IS FOR TESTING AT THE MOMENT,  REAL MAIN WILL BE IMPLEMENTED LATER
     int testIndex = 1;
     srand(time(0));
-    Player player(1, 1, '$');
     Level myLevel(testIndex);
+    Player player(1, myLevel.getHeight() - 1, '$');
     // int a;
     // cin >> a;
     system("setterm -cursor off"); //Removes console cursor
