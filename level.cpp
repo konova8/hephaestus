@@ -82,7 +82,7 @@ void Level::setPlatforms(int index)
 {
     //cout << "SPBEG" << endl;
     int platformsToBuild = index > N_PLATFORMS ? N_PLATFORMS : index;
-    int startingX = -1, y = this->height - 2, endingX = -1, minimumLength = 5; //minimumLength must not 
+    int startingX = -1, y = this->height - 2, endingX = -1, minimumLength = 5;
     //cout << "SP1, platformsToBuild: " << platformsToBuild << endl << "y: " << y << endl;
     for(int i = 0; i < platformsToBuild; i++)
     {
