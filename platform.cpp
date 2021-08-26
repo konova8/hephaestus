@@ -10,7 +10,7 @@ Platform::Platform(int startingPointX, int endingPointX, int y, char symbol)
     if (this->startingPointX >= this->endingPointX){
         int tmp = this->startingPointX;
         this->startingPointX = this->endingPointX;
-        this->endingPointX = this->startingPointX;
+        this->endingPointX = tmp;
     }
 }
 
@@ -32,8 +32,8 @@ bool Platform::isEntityUnderPlatform(int entit_y){
 
 void Platform::print()
 {
-    for(int i = startingPointX; i <= endingPointX; i++)
+    for(int i = this->startingPointX; i <= this->endingPointX; i++)
     {
-        mvaddch(i, this->y, this->symbol);
+        mvaddch(this->y, i, this->symbol);
     }
 }
