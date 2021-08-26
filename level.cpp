@@ -165,7 +165,7 @@ void Level::setEntities(int index)
             turretsBuilt++;
             //cout << "NEW TURERT COUNTS{ turretsTBB: " << turretsToBeBuilt << " turretsBuilt: " << turretsBuilt << endl;
         }
-        if(((allEnemies && currentPlatforms - i <= enemiesToBeSpawned) || (allEnemies && currentPlatforms - i > enemiesToBeSpawned && randomInRange(1, 10) > 3 || !allEnemies)) &&  enemiesSpawned < enemiesToBeSpawned)
+        if(((allEnemies && currentPlatforms - i <= enemiesToBeSpawned) || (allEnemies && currentPlatforms - i > enemiesToBeSpawned && randomInRange(1, 10) > 3 || !allEnemies)) && enemiesSpawned < enemiesToBeSpawned)
         {
             //cout << "GENERATING NEW ENEMY" << endl;
             int enemiesDirection = randomInRange(1, 10) > 5 ? 1 : -1;
