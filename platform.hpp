@@ -9,13 +9,7 @@ class Platform
         char symbol;
         int y;
     public:
-        Platform(int startingPointX, int endingPointX, int y, char symbol){
-            if (startingPointX >= endingPointX){
-                int tmp = startingPointX;
-                startingPointX = endingPointX;
-                endingPointX = startingPointX;
-            }
-        }; //Constructor
+        Platform(int startingPointX, int endingPointX, int y, char symbol);
         bool isEntityUnderPlatform(int entit_y); //Returns true if y is *one single block* under the platform
         int getStartingPointX();
         int getEndingPointX();

@@ -1,5 +1,18 @@
 #include "platform.hpp"
 
+Platform::Platform(int startingPointX, int endingPointX, int y, char symbol)
+{
+    this->startingPointX = startingPointX;
+    this->endingPointX = endingPointX;
+    this->y = y;
+    this->symbol = symbol;
+    if (this->startingPointX >= this->endingPointX){
+        int tmp = this->startingPointX;
+        this->startingPointX = this->endingPointX;
+        this->endingPointX = this->startingPointX;
+    }
+}
+
 int Platform::getStartingPointX(){
     return(this->startingPointX);
 }
