@@ -68,8 +68,8 @@ int main() {
     srand(time(0));
     Player player(1, 1, '$');
     Level myLevel(testIndex);
-    int a;
-    cin >> a;
+    // int a;
+    // cin >> a;
     initscr();
     noecho(); //Prevents the console form printing typed keys
     //nodelay(stdscr, true); //Makes getch() non blocking
