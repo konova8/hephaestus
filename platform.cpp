@@ -1,4 +1,5 @@
 #include "platform.hpp"
+#include <ncurses.h>
 
 Platform::Platform(int startingPointX, int endingPointX, int y, char symbol)
 {
@@ -31,5 +32,8 @@ bool Platform::isEntityUnderPlatform(int entit_y){
 
 void Platform::print()
 {
-    
+    for(int i = startingPointX; i <= endingPointX; i++)
+    {
+        mvaddch(i, this->y, this->symbol);
+    }
 }
