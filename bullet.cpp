@@ -11,6 +11,11 @@ int Bullet::getDirection()
     return this->direction;
 }
 
+int Bullet::getXAfterMove()
+{
+    return SingleBlockEntity::getXAfterMove(direction);
+}
+
 void Bullet::hitPlayer(Player *player)
 {
     player->healthChange(this->damage);

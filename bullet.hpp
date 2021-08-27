@@ -12,6 +12,8 @@ class Bullet : public SingleBlockEntity
         Bullet(int x = -1, int y = -1, int direction = 1, int damage = 10, char symbol = '*');
         void hitPlayer(Player *player); //Removes this->damage health from Player
         int getDirection();
+        int getXAfterMove();
+        using SingleBlockEntity::move;
         void move(); //moves x of bullet to the this->direction by one single block
 };
 
