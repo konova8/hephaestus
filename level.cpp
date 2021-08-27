@@ -169,7 +169,7 @@ void Level::setEntities(int index)
         {
             //cout << "GENERATING NEW ENEMY" << endl;
             int enemiesDirection = randomInRange(1, 10) > 5 ? 1 : -1;
-            enemies[enemyIndex] = new Enemy(randomInRange(platforms[i]->getStartingPointX(), platforms[i]->getEndingPointX()), platforms[i]->getY() - 1, enemiesDamage, enemiesDirection, '@');
+            enemies[enemyIndex] = new Enemy(randomInRange(platforms[i]->getStartingPointX(), platforms[i]->getEndingPointX()), platforms[i]->getY() - 1, enemiesDirection, enemiesDamage, '@');
             enemyIndex++;
             enemiesSpawned++;
             //cout << "NEW ENEMY COUNTS{ enemiesTBS: " << enemiesToBeSpawned << " enemiesSpawned: " << enemiesSpawned << endl;
@@ -222,19 +222,20 @@ void Level::drawLevel(Player player, int index)
         platforms[i]->print();
     }
     //cout << "DL3" << endl;
-    for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++)
-    {
-        turrets[i]->print();
-    }
     //cout << "DL4" << endl;
-    for(int i = 0; i < N_ENEMIES && enemies[i] != NULL; i++)
-    {
-        enemies[i]->print();
-    }
     //cout << "DL5" << endl;
     for(int i = 0; i < N_BONUSES && bonuses[i] != NULL; i++)
     {
         bonuses[i]->print();
+    }
+    for(int i = 0; i < N_ENEMIES && enemies[i] != NULL; i++)
+    {
+        enemies[i]->print();
+    }
+    for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++)
+    {
+        turrets[i]->printBullet();
+        turrets[i]->print();
     }
     //cout << "DL6" << endl;
     player.print();
@@ -249,7 +250,7 @@ void Level::updateLevel()
         {
             turrets[i]->updateBullet();
         }
-        turretsUpdate = true;
+        turretsUpdated = true;
     }
     if(enemiesUpdate.updateCounter % enemiesUpdate.updateCounter == 0)
     {
@@ -257,11 +258,12 @@ void Level::updateLevel()
         for(int i = 0; i < N_ENEMIES && enemies[i] != NULL; i++)
         {
             correspondingPlatformIndex = 0;
-            while(correspondingPlatformIndex < N_PLATFORMS && platforms[i] != NULL && enemies[i]->getY() != platforms[correspondingPlatformIndex]->getY() + 1) //finds enemy's corresponding platform, possible function
+            // int currentNumberOfPlatforms = index > N_PLATFORMS ? N_PLATFORMS : index;
+            while(correspondingPlatformIndex < N_PLATFORMS && platforms[correspondingPlatformIndex] != NULL && enemies[i]->getY() != platforms[correspondingPlatformIndex]->getY() - 1) //finds enemy's corresponding platform, possible function
             {
                 correspondingPlatformIndex++;
             }
-            if(platforms[correspondingPlatformIndex]->getStartingPointX() >= enemies[i]->getX() || platforms[correspondingPlatformIndex]->getEndingPointX() <= enemies[i]->getX())
+            if(platforms[correspondingPlatformIndex]->getStartingPointX() > enemies[i]->getXAfterMove() || platforms[correspondingPlatformIndex]->getEndingPointX() < enemies[i]->getXAfterMove())
             {
                 enemies[i]->reverseDirection();
             }
