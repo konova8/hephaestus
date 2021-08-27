@@ -18,7 +18,7 @@ int Bullet::getXAfterMove()
 
 void Bullet::hitPlayer(Player *player)
 {
-    player->healthChange(this->damage);
+    player->healthChange(-this->damage);
 }
 
 void Bullet::move()

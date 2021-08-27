@@ -2,6 +2,7 @@
 #define TURRET
 #include "singleBlockEntity.hpp"
 #include "bullet.hpp"
+#include "player.hpp"
 
 class Turret : public SingleBlockEntity
 {
@@ -12,8 +13,10 @@ class Turret : public SingleBlockEntity
         void updateBullet(); //Moves the bullet
         void resetBullet(); //Brings the bullet back to the turret position
         int getBulletDirection();
+        int getBulletX();
         bool isBulletColliding(SingleBlockEntity entity);
         void printBullet();
+        void hitPlayer(Player *player);
 };
 
 #endif

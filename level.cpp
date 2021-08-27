@@ -249,6 +249,10 @@ void Level::updateLevel()
         for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++)
         {
             turrets[i]->updateBullet();
+            if((turrets[i]->getBulletX() == 0 && turrets[i]->getBulletDirection() == -1) || (turrets[i]->getBulletX() == this->width && turrets[i]->getBulletDirection() == 1))
+            {
+                turrets[i]->resetBullet();
+            }
         }
         turretsUpdated = true;
     }
@@ -258,7 +262,6 @@ void Level::updateLevel()
         for(int i = 0; i < N_ENEMIES && enemies[i] != NULL; i++)
         {
             correspondingPlatformIndex = 0;
-            // int currentNumberOfPlatforms = index > N_PLATFORMS ? N_PLATFORMS : index;
             while(correspondingPlatformIndex < N_PLATFORMS && platforms[correspondingPlatformIndex] != NULL && enemies[i]->getY() != platforms[correspondingPlatformIndex]->getY() - 1) //finds enemy's corresponding platform, possible function
             {
                 correspondingPlatformIndex++;
@@ -307,16 +310,20 @@ void Level::exitLevel(int index)
 
 void Level::playerUpdate(Player *player, int keyPressed, int index)
 {
+    bool sideMove = keyPressed == ERR ? false : true; //if nothing is pressed then there is no move, so the move is not a side move
     bool changedPlatform = false; //Useful for enemy kill
+
     //determine what platform the player is on
     int currentPlatforms = index > N_PLATFORMS ? N_PLATFORMS : index;
     int heightIndex = this->height - 1, platformIndex = -1;
     while(player->getY() != heightIndex)
     {
-        heightIndex += 2;
+        heightIndex -= 2;
         platformIndex++;
     } //CREATE PLATFORMON(SINGLEBLOCKENTITY ENTITY) FUNC
-    if((keyPressed == 'w' || keyPressed == 'W' || keyPressed == KEY_UP) && platformIndex < currentPlatforms) //Useless to check for upper platforms if player is at the top
+
+    //Handle vertical moves
+    if(keyPressed == 'w' && platformIndex + 1 < currentPlatforms) //Useless to check for upper platforms if player is at the top (platformIndex + 1 because platformIndex starts from 0)
     {
         if(player->getX() >= platforms[platformIndex + 1]->getStartingPointX() && player->getX() <= platforms[platformIndex + 1]->getEndingPointX())
         {
@@ -324,15 +331,26 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
             player->move(keyPressed);
             changedPlatform = true;
         }
+        sideMove = false;
     }
-    else if((keyPressed == 's' || keyPressed == 'S' || keyPressed == KEY_DOWN) && platformIndex > 0) //Useless to check for platforms under player if player is not on a platform
+    else if(keyPressed == 's' && platformIndex > -1) //Useless to check for platforms under player if player is not on a platform (platformIndex > -1 because platformIndex starts indicating that some platform exists from the value 0 on)
     {
-        if((player->getX() >= platforms[platformIndex - 1]->getStartingPointX() && player->getX() <= platforms[platformIndex - 1]->getEndingPointX()))
+        bool allowedDownMove = false;
+        if(platformIndex == 0)
+        {
+            allowedDownMove = true;
+        }
+        else if((player->getX() >= platforms[platformIndex - 1]->getStartingPointX() && player->getX() <= platforms[platformIndex - 1]->getEndingPointX()))
+        {
+            allowedDownMove = true;
+        }
+        if(allowedDownMove)
         {
             player->move(keyPressed);
             player->move(keyPressed);
             changedPlatform = true;
         }
+        sideMove = false;
     }
 
     //check if move legal
@@ -346,36 +364,40 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
     //Handles cases of bullet collision
     int turretIndex = 0;
     int currentBulletDirection;
-    while(turretIndex < N_TURRETS && turrets[turretIndex] != NULL)
+    while(turretIndex < N_TURRETS && turrets[turretIndex] != NULL && platformIndex != -1)
     {
         currentBulletDirection = turrets[turretIndex]->getBulletDirection();
         if(turrets[turretIndex]->isBulletColliding(*player))
         {
             if((currentBulletDirection == 1 && keyPressed != 'd') || (currentBulletDirection == -1 && keyPressed != 'a') || !sideMoveIsLegal)
             {
-                player->deactivate();
+                turrets[turretIndex]->hitPlayer(player);
             }
         }
         turretIndex++;
     }
 
+    //Check what sideMove will change
+    int xChange = sideMove ? (sideMoveIsLegal ? (abs(player->getX() - player->getXAfterMove(keyPressed))) : 0) : 0; //If the move is not a side move then there will be no change in the x coordinate of the player
+
     //Handles cases of enemy collision
     int enemyIndex = 0;
     int currentEnemyDirection;
-    while(enemyIndex < N_ENEMIES && enemies[enemyIndex] != NULL)
+    while(enemyIndex < N_ENEMIES && enemies[enemyIndex] != NULL && platformIndex != -1)
     {
         currentEnemyDirection = enemies[enemyIndex]->getDirection();
-        if(enemies[enemyIndex]->isColliding(*player))
+        if((enemies[enemyIndex]->isColliding(*player)))
         {
             if(((currentEnemyDirection == 1 && keyPressed != 'd') || (currentEnemyDirection == -1 && keyPressed != 'a') || !sideMoveIsLegal) && !changedPlatform)
             {
-                player->deactivate();
+                enemies[enemyIndex]->hitPlayer(player);
             }
             else if(changedPlatform)
             {
                 enemies[enemyIndex]->deactivate();
             }
         }
+        enemyIndex++;
     }
     
     if(sideMoveIsLegal && keyPressed == 'd')
@@ -386,4 +408,26 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
     {
         player->move('a');
     }
+
+    enemyIndex = 0;
+    while(enemyIndex < N_ENEMIES && enemies[enemyIndex] != NULL && platformIndex != -1)
+    {
+        currentEnemyDirection = enemies[enemyIndex]->getDirection();
+        if((enemies[enemyIndex]->isColliding(*player)))
+        {
+            enemies[enemyIndex]->hitPlayer(player);
+        }
+        enemyIndex++;
+    }
+    turretIndex = 0;
+    while(turretIndex < N_TURRETS && turrets[turretIndex] != NULL && platformIndex != -1)
+    {
+        currentBulletDirection = turrets[turretIndex]->getBulletDirection();
+        if(turrets[turretIndex]->isBulletColliding(*player))
+        {
+            turrets[turretIndex]->hitPlayer(player);
+        }
+        turretIndex++;
+    }
+
 }

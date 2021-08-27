@@ -64,7 +64,7 @@ int convertMove(int keyPressed)
 
 int main() {
     //EVERYTHING HERE IS FOR TESTING AT THE MOMENT,  REAL MAIN WILL BE IMPLEMENTED LATER
-    int testIndex = 1;
+    int testIndex = 8;
     srand(time(0));
     Level myLevel(testIndex);
     Player player(1, myLevel.getHeight() - 1, '$');
@@ -80,17 +80,9 @@ int main() {
     {
         clear();
         myLevel.drawLevel(player, testIndex);
-        k = getch();
-        if(k == 'd')
-        {
-            myLevel = Level(testIndex + 1);
-            testIndex++;
-        }
-        else if(k == 'a' && testIndex > 1)
-        {
-            myLevel = Level(testIndex - 1);
-            testIndex--;
-        }
+        k = convertMove(getch());
+        myLevel.updateLevel();
+        myLevel.playerUpdate(&player, k, testIndex);
     }
     endwin();
     system("setterm -cursor on"); //Removes console cursor

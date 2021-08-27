@@ -39,3 +39,13 @@ void Turret::printBullet()
 {
     bullet->print();
 }
+
+int Turret::getBulletX()
+{
+    return bullet->getX();
+}
+
+void Turret::hitPlayer(Player *player)
+{
+    bullet->hitPlayer(player);
+}
