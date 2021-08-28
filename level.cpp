@@ -30,12 +30,10 @@ int Level::randomInRange(int min, int max)
 
 void Level::initializeEntitiesLists()
 {
-    //cout << "IE1" << endl;
     for(int i = 0; i < N_PLATFORMS; i++)
     {
         platforms[i] = NULL;
     }
-    //cout << "IE2" << endl;
     for(int i = 0; i < N_TURRETS; i++)
     {
         turrets[i] = NULL;
@@ -48,7 +46,6 @@ void Level::initializeEntitiesLists()
     {
         bonuses[i] = NULL;
     }
-    //cout << "IE3" << endl;
 }
 
 void Level::drawBorders(int index)
@@ -80,10 +77,8 @@ void Level::drawBorders(int index)
 
 void Level::setPlatforms(int index)
 {
-    //cout << "SPBEG" << endl;
     int platformsToBuild = index > N_PLATFORMS ? N_PLATFORMS : index;
     int startingX = -1, y = this->height - 2, endingX = -1, minimumLength = 5;
-    //cout << "SP1, platformsToBuild: " << platformsToBuild << endl << "y: " << y << endl;
     for(int i = 0; i < platformsToBuild; i++)
     {
         if(i == 0)
@@ -101,38 +96,29 @@ void Level::setPlatforms(int index)
                 startingX = randomInRange(0, endingX - startingX) + startingX;
             }
         }
-        //cout << "CHOSEN STARTING X: " << startingX << " ENDINGX: " << endingX << endl;
         if(startingX < width / 2)
         {
-            //cout << "SPI1" << endl;
             do
             {
                 endingX = randomInRange(startingX, this->width - 5 - minimumLength) + minimumLength;
-                //cout << "CHOSEN ENDING X1: " << endingX << endl;
             }
             while(endingX == startingX);
         }
         else
         {
-            //cout << "SPI2" << endl;
             do
             {
                 endingX = randomInRange(5 + minimumLength, startingX) - minimumLength;
-                //cout << "CHOSEN ENDING X2: " << endingX << endl;
             }
             while(endingX == startingX);
         }
         platforms[i] = new Platform(startingX, endingX, y, '=');
-        //std::cout << "---------------\nSTARTINGX: " << platforms[i]->getStartingPointX() << "\nENDINGX: " << platforms[i]->getEndingPointX() << "\nY: " << platforms[i]->getY() << "\n---------------" << std::endl;
         y -= 2;
     }
-    //cout << platforms[0]->getY() << endl;
-    //cout << "SPEND" << endl;
 }
 
 void Level::setEntities(int index)
 {
-    //cout << "SEBEG" << endl;
     bool allTurrets = index > N_TURRETS;
     bool allEnemies = index > N_ENEMIES;
     bool allBonuses = index > N_BONUSES;
@@ -143,41 +129,32 @@ void Level::setEntities(int index)
     int currentPlatforms = index > N_PLATFORMS ? N_PLATFORMS : index;
     int turretIndex = 0, enemyIndex = 0, bonusIndex = 0;
     int enemiesDamage = MIN_DAMAGE > index ? MIN_DAMAGE : (MAX_DAMAGE < index ? MAX_DAMAGE : index);
-    //cout << "SE1: allTurrets: " << allTurrets << endl << "allEnemies: " << allEnemies << endl << "allBonuses: " << allBonuses << endl;
-    //cout << "SE2: turretsTBB: " << turretsToBeBuilt << endl << "enemiesTBS: " << enemiesToBeSpawned << endl << "bonusesTBS: " << bonusesToBeSpawned << endl << "currentPlatforms: " << currentPlatforms << endl << "enemiesDamage: " << enemiesDamage << endl; 
     for(int i = 0; i < currentPlatforms; i++)
     {
-        //cout << "NNNNNNNNNNNNNNNNNNNN\n<<<<<<<<<<<<<<<<<<<<<\ni: " << i << endl << "currentPlatforms: " << currentPlatforms << endl << "currentPlatforms - i: " << currentPlatforms - i << endl << "<<<<<<<<<<<<<<<<<<<<<" << endl;
         //if(all turrets should be built and I have the same number of platforms as turrets) or if(all turrets should be built but the number of platforms allows for the current platform not to have a turret and random chance) or if(not all turrets should be built and therefore the turrets to be built equals the number of platforms) and in all these cases IF the turrets already built are less than the total to be built then build turret at current platform level
         if(((allTurrets && currentPlatforms - i <= turretsToBeBuilt) || (allTurrets && currentPlatforms - i > turretsToBeBuilt && randomInRange(1, 10) > 7 || !allTurrets)) && turretsBuilt < turretsToBeBuilt)
         {
             if(randomInRange(1, 10) > 5)
             {
-                //cout << "GENERATING NEW TURRET SX" << endl;
                 turrets[turretIndex] = new Turret(1, platforms[i]->getY() - 1, true, '>');
             }
             else
             {
-                //cout << "GENERATING NEW TURRET DX" << endl;
                 turrets[turretIndex] = new Turret(this->width - 1, platforms[i]->getY() - 1, true, '<');
             }
             turretIndex++;
             turretsBuilt++;
-            //cout << "NEW TURERT COUNTS{ turretsTBB: " << turretsToBeBuilt << " turretsBuilt: " << turretsBuilt << endl;
         }
         if(((allEnemies && currentPlatforms - i <= enemiesToBeSpawned) || (allEnemies && currentPlatforms - i > enemiesToBeSpawned && randomInRange(1, 10) > 3 || !allEnemies)) && enemiesSpawned < enemiesToBeSpawned)
         {
-            //cout << "GENERATING NEW ENEMY" << endl;
             int enemiesDirection = randomInRange(1, 10) > 5 ? 1 : -1;
             enemies[enemyIndex] = new Enemy(randomInRange(platforms[i]->getStartingPointX(), platforms[i]->getEndingPointX()), platforms[i]->getY() - 1, enemiesDirection, enemiesDamage, '@');
             enemyIndex++;
             enemiesSpawned++;
-            //cout << "NEW ENEMY COUNTS{ enemiesTBS: " << enemiesToBeSpawned << " enemiesSpawned: " << enemiesSpawned << endl;
         }
         if(((allBonuses && currentPlatforms - i <= bonusesToBeSpawned) || (allBonuses && currentPlatforms - i > bonusesToBeSpawned && randomInRange(1, 10) > 8 || !allBonuses)) && bonusesSpawned < bonusesToBeSpawned)
         {
             char bonusType = randomInRange(1, 10) > 8 ? 'h' : 'p';
-            //cout << "BONUSTYPE: " << bonusType << endl;
             int bonusEffect;
             if(bonusType == 'h')
             {
@@ -191,9 +168,7 @@ void Level::setEntities(int index)
             bonusIndex++;
             bonusesSpawned++;
         }
-        //cout << "||||||||||||||||||||||||" << endl;
     }
-    //cout << "SEEND" << endl;
 }
 
 int Level::getWidth()
@@ -209,21 +184,16 @@ int Level::getHeight()
 void Level::drawLevel(Player player, int index)
 {
     char spaces[100] = "";
-    //cout << "DL1" << endl;
     for(int i = 0; i < width + 1; i++)
     {
         strcat(spaces, " ");
     }
     printw("%sPoints: %d\n%sHealth: %d", spaces, player.getPoints(), spaces, player.getHealth());
     drawBorders(index);
-    //cout << "DL2" << endl;
     for(int i = 0; i < N_PLATFORMS && platforms[i] != NULL; i++)
     {
         platforms[i]->print();
     }
-    //cout << "DL3" << endl;
-    //cout << "DL4" << endl;
-    //cout << "DL5" << endl;
     for(int i = 0; i < N_BONUSES && bonuses[i] != NULL; i++)
     {
         if(bonuses[i]->getExistence())
@@ -243,7 +213,6 @@ void Level::drawLevel(Player player, int index)
         turrets[i]->printBullet();
         turrets[i]->print();
     }
-    //cout << "DL6" << endl;
     player.print();
 }
 
