@@ -10,8 +10,9 @@ Level::Level(int index)
 {
     this->width = 40;
     this->height = 15;
-    turretsUpdate.updateTime = 20 - index < MIN_BULLET_UPDATE ? MIN_BULLET_UPDATE : index - 20;
-    enemiesUpdate.updateTime = 20 - index < MIN_ENEMY_UPDATE ? MIN_ENEMY_UPDATE : index - 20;
+    this->turretsUpdate.updateTime = 20 - index < MIN_BULLET_UPDATE ? MIN_BULLET_UPDATE : 20 - index;
+    this->enemiesUpdate.updateTime = 20 - index < MIN_ENEMY_UPDATE ? MIN_ENEMY_UPDATE : 20 - index;
+    this->needsDraw = true;
     initializeEntitiesLists();
     setPlatforms(index);
     setEntities(index);
@@ -183,37 +184,42 @@ int Level::getHeight()
 
 void Level::drawLevel(Player player, int index)
 {
-    char spaces[100] = "";
-    for(int i = 0; i < width + 1; i++)
+    if(needsDraw)
     {
-        strcat(spaces, " ");
-    }
-    printw("%sPoints: %d\n%sHealth: %d\n%sLevel: %d", spaces, player.getPoints(), spaces, player.getHealth(), spaces, index);
-    drawBorders(index);
-    for(int i = 0; i < N_PLATFORMS && platforms[i] != NULL; i++)
-    {
-        platforms[i]->print();
-    }
-    for(int i = 0; i < N_BONUSES && bonuses[i] != NULL; i++)
-    {
-        if(bonuses[i]->getExistence())
+        clear();
+        char spaces[100] = "";
+        for(int i = 0; i < width + 1; i++)
         {
-            bonuses[i]->print();
+            strcat(spaces, " ");
         }
-    }
-    for(int i = 0; i < N_ENEMIES && enemies[i] != NULL; i++)
-    {
-        if(enemies[i]->getExistence())
+        printw("%sPoints: %d\n%sHealth: %d\n%sLevel: %d", spaces, player.getPoints(), spaces, player.getHealth(), spaces, index);
+        drawBorders(index);
+        for(int i = 0; i < N_PLATFORMS && platforms[i] != NULL; i++)
         {
-            enemies[i]->print();
+            platforms[i]->print();
         }
+        for(int i = 0; i < N_BONUSES && bonuses[i] != NULL; i++)
+        {
+            if(bonuses[i]->getExistence())
+            {
+                bonuses[i]->print();
+            }
+        }
+        for(int i = 0; i < N_ENEMIES && enemies[i] != NULL; i++)
+        {
+            if(enemies[i]->getExistence())
+            {
+                enemies[i]->print();
+            }
+        }
+        for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++) //Doesn't check for existence because turrets can't be destroyed
+        {
+            turrets[i]->printBullet();
+            turrets[i]->print();
+        }
+        player.print();
+        needsDraw = false;
     }
-    for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++) //Doesn't check for existence because turrets can't be destroyed
-    {
-        turrets[i]->printBullet();
-        turrets[i]->print();
-    }
-    player.print();
 }
 
 void Level::updateLevel()
@@ -270,6 +276,14 @@ void Level::updateLevel()
     else
     {
         enemiesUpdate.updateCounter++;
+    }
+    if(enemiesUpdated || turretsUpdated)
+    {
+        this->needsDraw = true;
+    }
+    else
+    {
+        this->needsDraw = false;
     }
 }
 
@@ -341,6 +355,7 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
             player->move(keyPressed);
             player->move(keyPressed);
             changedPlatform = true;
+            needsDraw = true;
         }
         sideMove = false;
     }
@@ -360,6 +375,7 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
             player->move(keyPressed);
             player->move(keyPressed);
             changedPlatform = true;
+            needsDraw = true;
         }
         sideMove = false;
     }
@@ -385,6 +401,7 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
             {
                 turrets[turretIndex]->hitPlayer(player);
                 turrets[turretIndex]->resetBullet();
+                needsDraw = true;
             }
         }
     }
@@ -404,10 +421,12 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
             if(((currentEnemyDirection == 1 && keyPressed != 'd') || (currentEnemyDirection == -1 && keyPressed != 'a') || !platformSideMoveLegal) && !changedPlatform)
             {
                 enemies[enemyIndex]->hitPlayer(player);
+                needsDraw = true;
             }
             else if(changedPlatform)
             {
                 enemies[enemyIndex]->deactivate();
+                needsDraw = true;
             }
         }
     }
@@ -416,10 +435,12 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
     if(platformSideMoveLegal && keyPressed == 'd')
     {
         player->move('d');
+        needsDraw = true;
     }
     else if(platformSideMoveLegal && keyPressed == 'a')
     {
         player->move('a');
+        needsDraw = true;
     }
 
     //Second bullet collision check
@@ -430,6 +451,7 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
         {
             turrets[turretIndex]->hitPlayer(player);
             turrets[turretIndex]->resetBullet();
+            needsDraw = true;
         }
     }
 
@@ -440,6 +462,7 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
         if(enemies[enemyIndex]->getExistence() && enemies[enemyIndex]->isColliding(*player))
         {
             enemies[enemyIndex]->hitPlayer(player);
+            needsDraw = true;
         }
     }
 
@@ -450,6 +473,7 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
         if(bonuses[bonusIndex]->getExistence() && bonuses[bonusIndex]->isColliding(*player))
         {
             bonuses[bonusIndex]->use(player);
+            needsDraw = true;
         }
         bonusIndex++;
     }

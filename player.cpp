@@ -8,6 +8,7 @@ Player::Player(int x, int y, char symbol, int health, int points)
     this->points = points;
     this->exists = true;
     this->symbol = symbol;
+    this->maxHealth = 100;
 }
 
 int Player::getHealth()
@@ -58,7 +59,14 @@ int Player::getYAfterMove(int keyPressed){
 }
 
 void Player::healthChange(int change){
-    this->health += change;
+    if(this->health + change > maxHealth)
+    {
+        this->health = maxHealth;
+    }
+    else
+    {
+        this->health += change;
+    }
 }
 
 void Player::pointsChange(int change){

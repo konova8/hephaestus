@@ -12,12 +12,12 @@ struct mapNode {
     mapNode *prev;
     Level level;
     mapNode *next;
-    mapNode(int index, mapNode *previousNode = NULL)
+    mapNode(int index, mapNode *previousNode = NULL, mapNode *nextNode = NULL)
     {
         this->index = index;
         this->prev = previousNode;
         this->level = Level(index);
-        this->next = NULL;
+        this->next = nextNode;
     }
 };
 
@@ -92,7 +92,6 @@ int main() {
     int playerAtBorder;
     while(k != 'q' && player.getHealth() > 0)
     {
-        clear();
         currentNode->level.drawLevel(player, currentNode->index);
         k = convertMove(getch());
         currentNode->level.updateLevel();
@@ -117,6 +116,10 @@ int main() {
                 }
                 else
                 {
+                    if(currentNode->prev == NULL)
+                    {
+                        currentNode->prev = new mapNode(currentNode->index - 1, NULL, currentNode);
+                    }
                     currentNode = currentNode->prev;
                     movePlayerTo('e', &player, currentNode->level);
                 }

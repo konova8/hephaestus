@@ -6,6 +6,7 @@
 class Player : public SingleBlockEntity
 {
     protected:
+        int maxHealth;
         int health;
         int points;
     public:

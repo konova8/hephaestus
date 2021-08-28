@@ -51,6 +51,7 @@ class Level
         bool checkEnemyCollisions1(Player *player, bool sideMoveIsLegal, bool changedPlatform, int enemyIndex, int keyPressed);
         bool checkEnemyCollisions2(Player *player, int enemyIndex);
         bool checkBulletCollisions2(Player player, int xChange, int correspondingTurretIndex);
+        bool needsDraw;
     public:
         Level(int index = 1);
         int getWidth();
