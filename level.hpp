@@ -13,7 +13,8 @@
 #define MIN_DAMAGE 10
 #define MAX_DAMAGE 100
 #define MAX_HEALTHBONUS 50
-#define MAX_POINTBONUS 100
+#define MIN_HEALTHBONUS 5
+#define MIN_POINTSBONUS 10
 #define MIN_BULLET_UPDATE 3
 #define MIN_ENEMY_UPDATE 2
 
@@ -38,20 +39,16 @@ class Level
         updateData enemiesUpdate;
         int width;
         int height;
+        bool needsDraw;
+        char spaces[100];
         int randomInRange(int min, int max);
         void initializeEntitiesLists();
         bool isPlayerMoveLegal(Player player, int keyPressed);
-        bool isPlayerGoingOutMap(int keyPressed);
-        bool isPlayerGoingOutPlatform(int keyPressed);
         void drawBorders(int index);
         void setPlatforms(int index);
         void setEntities(int index);
         int findTurretIndex(Player *player);
         int findEnemyIndex(Player *player);
-        bool checkEnemyCollisions1(Player *player, bool sideMoveIsLegal, bool changedPlatform, int enemyIndex, int keyPressed);
-        bool checkEnemyCollisions2(Player *player, int enemyIndex);
-        bool checkBulletCollisions2(Player player, int xChange, int correspondingTurretIndex);
-        bool needsDraw;
     public:
         Level(int index = 1);
         int getWidth();

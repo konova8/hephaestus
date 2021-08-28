@@ -1,13 +1,9 @@
 #include "player.hpp"
 
-Player::Player(int x, int y, char symbol, int health, int points)
+Player::Player(int x, int y, char symbol, int health, int points) : SingleBlockEntity(x, y, true, symbol)
 {
-    this->x = x;
-    this->y = y;
     this->health = health;
     this->points = points;
-    this->exists = true;
-    this->symbol = symbol;
     this->maxHealth = 100;
 }
 
@@ -22,40 +18,48 @@ int Player::getPoints()
 }
 
 void Player::move(int keyPressed){
-    if (keyPressed == 'a' || keyPressed == 'A' || keyPressed == KEY_LEFT){  
+    if (keyPressed == 'd')
+    {
+        SingleBlockEntity::move(1, 0);
+    }
+    else if (keyPressed == 'a')
+    {  
         SingleBlockEntity::move(-1, 0);
     }
-    else if (keyPressed == 's' || keyPressed == 'S' || keyPressed == KEY_DOWN){
-        SingleBlockEntity::move(0, 1);
-    }
-    if (keyPressed == 'W' || keyPressed == 'w' || keyPressed == KEY_UP){
+    else if (keyPressed == 'w')
+    {
         SingleBlockEntity::move(0, -1);
     }
-    if (keyPressed == 'd' || keyPressed == 'D' || keyPressed == KEY_RIGHT){
-        SingleBlockEntity::move(1, 0);
+    else if (keyPressed == 's')
+    {
+        SingleBlockEntity::move(0, 1);
     }
 }
 
 int Player::getXAfterMove(int keyPressed){
-    int tmp = 0;
-    if (keyPressed == 'a' || keyPressed == 'A' || keyPressed == KEY_LEFT){ 
-        tmp = SingleBlockEntity::getX() - 1;
+    int xAfterMove = 0;
+    if (keyPressed == 'd')
+    {
+        xAfterMove = SingleBlockEntity::getX() + 1;
     }
-    else if (keyPressed == 'd' || keyPressed == 'D' || keyPressed == KEY_RIGHT){
-        tmp = SingleBlockEntity::getX() + 1;
+    else if (keyPressed == 'a')
+    { 
+        xAfterMove = SingleBlockEntity::getX() - 1;
     }
-    return(tmp);
+    return xAfterMove;
 }
 
 int Player::getYAfterMove(int keyPressed){
-    int tmp = 0;
-    if (keyPressed == 's' || keyPressed == 'S' || keyPressed == KEY_DOWN){
-        tmp = SingleBlockEntity::getY() + 1;
+    int yAfterMove = 0;
+    if (keyPressed == 'w')
+    {
+        yAfterMove = SingleBlockEntity::getY() - 1;
     }
-    else if (keyPressed == 'W' || keyPressed == 'w' || keyPressed == KEY_UP){
-        tmp = SingleBlockEntity::getY() - 1;
+    else if (keyPressed == 's')
+    {
+        yAfterMove = SingleBlockEntity::getY() + 1;
     }
-    return(tmp);
+    return yAfterMove;
 }
 
 void Player::healthChange(int change){

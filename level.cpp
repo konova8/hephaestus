@@ -13,6 +13,10 @@ Level::Level(int index)
     this->turretsUpdate.updateTime = 20 - index < MIN_BULLET_UPDATE ? MIN_BULLET_UPDATE : 20 - index;
     this->enemiesUpdate.updateTime = 20 - index < MIN_ENEMY_UPDATE ? MIN_ENEMY_UPDATE : 20 - index;
     this->needsDraw = true;
+    for(int i = 0; i < width + 1; i++)
+    {
+        strcat(this->spaces, " ");
+    }
     initializeEntitiesLists();
     setPlatforms(index);
     setEntities(index);
@@ -65,7 +69,7 @@ void Level::drawBorders(int index)
         }
         else if(i == this->height - 1)
         {
-            mvaddch(i, 0, '|');
+            mvaddch(i, 0, 'E');
             mvaddch(i, this->width, ']');
         }
         else
@@ -155,15 +159,15 @@ void Level::setEntities(int index)
         }
         if(((allBonuses && currentPlatforms - i <= bonusesToBeSpawned) || (allBonuses && currentPlatforms - i > bonusesToBeSpawned && randomInRange(1, 10) > 8 || !allBonuses)) && bonusesSpawned < bonusesToBeSpawned)
         {
-            char bonusType = randomInRange(1, 10) > 2 && index > 3 ? 'p' : 'h';
+            char bonusType = randomInRange(1, 10) > 2 ? 'p' : 'h';
             int bonusEffect;
             if(bonusType == 'h')
             {
-                bonusEffect = index > MAX_HEALTHBONUS ? MAX_HEALTHBONUS : index;
+                bonusEffect = index > MAX_HEALTHBONUS ? MAX_HEALTHBONUS : (index < MIN_HEALTHBONUS ? MIN_HEALTHBONUS : index);
             }
             else
             {
-                bonusEffect = index / 3;
+                bonusEffect = index / 3 < MIN_POINTSBONUS ? MIN_POINTSBONUS : index / 3;
             }
             bonuses[bonusIndex] = new Bonus(randomInRange(platforms[i]->getStartingPointX(), platforms[i]->getEndingPointX()), platforms[i]->getY() - 1, bonusType, bonusEffect);
             bonusIndex++;
@@ -187,12 +191,7 @@ void Level::drawLevel(Player player, int index)
     if(needsDraw)
     {
         clear();
-        char spaces[100] = "";
-        for(int i = 0; i < width + 1; i++)
-        {
-            strcat(spaces, " ");
-        }
-        printw("%sPoints: %d\n%sHealth: %d\n%sLevel: %d", spaces, player.getPoints(), spaces, player.getHealth(), spaces, index);
+        printw("%sPoints: %d\n%sHealth: %d\n%sLevel: %d", this->spaces, player.getPoints(), this->spaces, player.getHealth(), this->spaces, index);
         drawBorders(index);
         for(int i = 0; i < N_PLATFORMS && platforms[i] != NULL; i++)
         {
@@ -389,7 +388,7 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
     }
 
     int currentBulletDirection;
-    int turretIndex = (platformIndex == -1 && !changedPlatform) ? -1 : findTurretIndex(player); //Condition
+    int turretIndex = (platformIndex == -1 && !changedPlatform) ? -1 : findTurretIndex(player);
     
     //First bullet collision check
     if(turretIndex != -1)
@@ -426,6 +425,8 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
             else if(changedPlatform)
             {
                 enemies[enemyIndex]->deactivate();
+                int toDivideBy = index < 5 ? 1 : (index > 200 ? 4 : 2);
+                player->pointsChange((index * 5) / toDivideBy);
                 needsDraw = true;
             }
         }
