@@ -10,13 +10,13 @@ using namespace std;
 struct mapNode {
     int index;
     mapNode *prev;
-    Level currentLevel;
+    Level level;
     mapNode *next;
     mapNode(int index, mapNode *previousNode = NULL)
     {
         this->index = index;
         this->prev = previousNode;
-        this->currentLevel = Level(index);
+        this->level = Level(index);
         this->next = NULL;
     }
 };
@@ -25,11 +25,6 @@ mapNode *newNode(mapNode *currentNode)
 {
     mapNode *newNode = new mapNode(currentNode->index + 1, currentNode);
     return newNode;
-}
-
-void printProps(mapNode *m) //Testing purposes, will be removed before merge
-{
-    cout << "---------\nINDEX: " << m->index << "\tPREV: " << m->prev << "\tNEXT: " << m->next << "\n---------" << endl;
 }
 
 int convertMove(int keyPressed)
@@ -62,27 +57,72 @@ int convertMove(int keyPressed)
     return newKeyPressed;
 }
 
+void movePlayerTo(char whereTo, Player *player, Level level) //whereTo = 's' => move player to start, whereTo = 'e' => move player to end
+{
+    int toMoveY = 0;
+    int toMoveX = 0;
+    if(whereTo == 's')
+    {
+        toMoveY = player->getY() == level.getHeight() - 1 ? 0 : (level.getHeight() - player->getY());
+        toMoveX = player->getX() == 1 ? 0 : (1 - player->getX());
+    }
+    else if(whereTo == 'e')
+    {
+        toMoveY = player->getY() == level.getHeight() - 1 ? 0 : (level.getHeight() - player->getY());
+        toMoveX = player->getX() == level.getWidth() - 1 ? 0 : ((level.getWidth() - 1 ) - player->getX());
+    }
+    player->move(toMoveX, toMoveY);
+}
+
+void sleepMs(int microseconds)
+{
+    usleep(microseconds * 1000);
+}
+
 int main() {
-    //EVERYTHING HERE IS FOR TESTING AT THE MOMENT,  REAL MAIN WILL BE IMPLEMENTED LATER
-    int testIndex = 3;
     srand(time(0));
-    Level myLevel(testIndex);
-    Player player(1, myLevel.getHeight() - 1, '$');
-    // int a;
-    // cin >> a;
+    mapNode *currentNode = new mapNode(1);
+    Player player(1, currentNode->level.getHeight() - 1, '$');
     system("setterm -cursor off"); //Removes console cursor
     initscr();
     noecho(); //Prevents the console form printing typed keys
-    //nodelay(stdscr, true); //Makes getch() non blocking
+    nodelay(stdscr, true); //Makes getch() non blocking
     keypad(stdscr, TRUE); //Allows use of arrow keys
     int k;
-    while(k != 'q')
+    int playerAtBorder;
+    while(k != 'q' && player.getHealth() > 0)
     {
         clear();
-        myLevel.drawLevel(player, testIndex);
+        currentNode->level.drawLevel(player, currentNode->index);
         k = convertMove(getch());
-        myLevel.updateLevel();
-        myLevel.playerUpdate(&player, k, testIndex);
+        currentNode->level.updateLevel();
+        currentNode->level.playerUpdate(&player, k, currentNode->index);
+        if(k == 'd' || k == 'a')
+        {
+            playerAtBorder = currentNode->level.isPlayerAtBorder(player);
+            if(playerAtBorder == 1)
+            {
+                if(currentNode->next == NULL)
+                {
+                    currentNode->next = newNode(currentNode);
+                }
+                currentNode = currentNode->next;
+                movePlayerTo('s', &player, currentNode->level);
+            }
+            else if(playerAtBorder == -1)
+            {
+                if(currentNode->index == 1)
+                {
+                    k = 'q';
+                }
+                else
+                {
+                    currentNode = currentNode->prev;
+                    movePlayerTo('e', &player, currentNode->level);
+                }
+            }
+        }
+        sleepMs(33);
     }
     endwin();
     system("setterm -cursor on"); //Removes console cursor

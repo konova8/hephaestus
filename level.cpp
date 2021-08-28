@@ -154,7 +154,7 @@ void Level::setEntities(int index)
         }
         if(((allBonuses && currentPlatforms - i <= bonusesToBeSpawned) || (allBonuses && currentPlatforms - i > bonusesToBeSpawned && randomInRange(1, 10) > 8 || !allBonuses)) && bonusesSpawned < bonusesToBeSpawned)
         {
-            char bonusType = randomInRange(1, 10) > 8 ? 'h' : 'p';
+            char bonusType = randomInRange(1, 10) > 2 && index > 3 ? 'p' : 'h';
             int bonusEffect;
             if(bonusType == 'h')
             {
@@ -188,7 +188,7 @@ void Level::drawLevel(Player player, int index)
     {
         strcat(spaces, " ");
     }
-    printw("%sPoints: %d\n%sHealth: %d", spaces, player.getPoints(), spaces, player.getHealth());
+    printw("%sPoints: %d\n%sHealth: %d\n%sLevel: %d", spaces, player.getPoints(), spaces, player.getHealth(), spaces, index);
     drawBorders(index);
     for(int i = 0; i < N_PLATFORMS && platforms[i] != NULL; i++)
     {
@@ -231,7 +231,7 @@ void Level::updateLevel()
         }
         turretsUpdated = true;
     }
-    if(enemiesUpdate.updateCounter % enemiesUpdate.updateCounter == 0)
+    if(enemiesUpdate.updateCounter % enemiesUpdate.updateTime == 0)
     {
         int correspondingPlatformIndex;
         for(int i = 0; i < N_ENEMIES && enemies[i] != NULL; i++)
@@ -239,7 +239,7 @@ void Level::updateLevel()
             if(enemies[i]->getExistence())
             {
                 correspondingPlatformIndex = 0;
-                while(correspondingPlatformIndex < N_PLATFORMS && platforms[correspondingPlatformIndex] != NULL && enemies[i]->getY() != platforms[correspondingPlatformIndex]->getY() - 1) //finds enemy's corresponding platform, possible function
+                while(correspondingPlatformIndex < N_PLATFORMS && platforms[correspondingPlatformIndex] != NULL && enemies[i]->getY() != platforms[correspondingPlatformIndex]->getY() - 1)
                 {
                     correspondingPlatformIndex++;
                 }
@@ -257,7 +257,7 @@ void Level::updateLevel()
     }
     if(turretsUpdated)
     {
-        turretsUpdate.updateCounter = 0;
+        turretsUpdate.updateCounter = 1;
     }
     else
     {
@@ -265,17 +265,12 @@ void Level::updateLevel()
     }
     if(enemiesUpdated)
     {
-        enemiesUpdate.updateCounter = 0;
+        enemiesUpdate.updateCounter = 1;
     }
     else
     {
         enemiesUpdate.updateCounter++;
     }
-}
-
-int Level::isPlayerAtBorder()
-{
-
 }
 
 void Level::exitLevel(int index)
@@ -370,11 +365,11 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
     }
 
     //Check if side move is legal
-    bool sideMoveIsLegal = true; //Not legal => player will not move to the left or right
+    bool platformSideMoveLegal = true; //Not legal => player will not move to the left or right
     int playerXAfterMove = player->getXAfterMove(keyPressed);
     if(platformIndex != -1 && (playerXAfterMove == width || playerXAfterMove == 0 || platforms[platformIndex]->getStartingPointX() > playerXAfterMove || platforms[platformIndex]->getEndingPointX() < playerXAfterMove)) //Checks if player is on a platform (therefore subject to possible bullet/enemy collisions) and if the move will result in not moving, which is true only if the player is trying to get off the platform without using KEY_DOWN/s/S or if it is at a map border
     {
-        sideMoveIsLegal = false;
+        platformSideMoveLegal = false;
     }
 
     int currentBulletDirection;
@@ -386,7 +381,7 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
         currentBulletDirection = turrets[turretIndex]->getBulletDirection();
         if(turrets[turretIndex]->isBulletColliding(*player))
         {
-            if((currentBulletDirection == 1 && keyPressed != 'd') || (currentBulletDirection == -1 && keyPressed != 'a') || !sideMoveIsLegal)
+            if((currentBulletDirection == 1 && keyPressed != 'd') || (currentBulletDirection == -1 && keyPressed != 'a') || !platformSideMoveLegal)
             {
                 turrets[turretIndex]->hitPlayer(player);
                 turrets[turretIndex]->resetBullet();
@@ -395,7 +390,7 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
     }
 
     //Check what sideMove will change
-    int xChange = sideMove ? (sideMoveIsLegal ? (abs(player->getX() - player->getXAfterMove(keyPressed))) : 0) : 0; //If the move is not a side move then there will be no change in the x coordinate of the player
+    int xChange = sideMove ? (platformSideMoveLegal ? (abs(player->getX() - player->getXAfterMove(keyPressed))) : 0) : 0; //If the move is not a side move then there will be no change in the x coordinate of the player
 
     int currentEnemyDirection;
     int enemyIndex = (platformIndex == -1 && !changedPlatform) ? -1 : findEnemyIndex(player);
@@ -406,7 +401,7 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
         currentEnemyDirection = enemies[enemyIndex]->getDirection();
         if(enemies[enemyIndex]->getExistence() && enemies[enemyIndex]->isColliding(*player))
         {
-            if(((currentEnemyDirection == 1 && keyPressed != 'd') || (currentEnemyDirection == -1 && keyPressed != 'a') || !sideMoveIsLegal) && !changedPlatform)
+            if(((currentEnemyDirection == 1 && keyPressed != 'd') || (currentEnemyDirection == -1 && keyPressed != 'a') || !platformSideMoveLegal) && !changedPlatform)
             {
                 enemies[enemyIndex]->hitPlayer(player);
             }
@@ -416,13 +411,13 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
             }
         }
     }
-    
+
     //Player move
-    if(sideMoveIsLegal && keyPressed == 'd')
+    if(platformSideMoveLegal && keyPressed == 'd')
     {
         player->move('d');
     }
-    else if(sideMoveIsLegal && keyPressed == 'a')
+    else if(platformSideMoveLegal && keyPressed == 'a')
     {
         player->move('a');
     }
@@ -458,4 +453,21 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
         }
         bonusIndex++;
     }
+}
+
+int Level::isPlayerAtBorder(Player player)
+{
+    int result = 0;
+    if(player.getY() == height - 1)
+    {
+        if(player.getX() == 0)
+        {
+            result = -1;
+        }
+        else if(player.getX() == width)
+        {
+            result = 1;
+        }
+    }
+    return result;
 }

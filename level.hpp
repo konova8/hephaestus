@@ -13,6 +13,7 @@
 #define MIN_DAMAGE 10
 #define MAX_DAMAGE 100
 #define MAX_HEALTHBONUS 50
+#define MAX_POINTBONUS 100
 #define MIN_BULLET_UPDATE 3
 #define MIN_ENEMY_UPDATE 2
 
@@ -59,7 +60,7 @@ class Level
         int isAtBottomBorder(); //Returns 1 if player is at right bottom border, 0 if it is not at a bottom border, -1 if it is at the left bottom border
         void exitLevel(int index);
         void playerUpdate(Player *player, int keyPressed, int index);
-        int isPlayerAtBorder(); //Returns -1 if player is at left border, 1 if player is at right border, 0 if it is not at any border
+        int isPlayerAtBorder(Player player); //Returns -1 if player is at left border, 1 if player is at right border, 0 if it is not at any border
         
 };
 
