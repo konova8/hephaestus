@@ -1,5 +1,4 @@
 #include "level.hpp"
-#include <iostream> //Testing purposes, will remove later
 #include <cstdlib>
 #include <ncurses.h>
 #include <string.h>
