@@ -226,13 +226,19 @@ void Level::drawLevel(Player player, int index)
     //cout << "DL5" << endl;
     for(int i = 0; i < N_BONUSES && bonuses[i] != NULL; i++)
     {
-        bonuses[i]->print();
+        if(bonuses[i]->getExistence())
+        {
+            bonuses[i]->print();
+        }
     }
     for(int i = 0; i < N_ENEMIES && enemies[i] != NULL; i++)
     {
-        enemies[i]->print();
+        if(enemies[i]->getExistence())
+        {
+            enemies[i]->print();
+        }
     }
-    for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++)
+    for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++) //Doesn't check for existence because turrets can't be destroyed
     {
         turrets[i]->printBullet();
         turrets[i]->print();
@@ -261,18 +267,21 @@ void Level::updateLevel()
         int correspondingPlatformIndex;
         for(int i = 0; i < N_ENEMIES && enemies[i] != NULL; i++)
         {
-            correspondingPlatformIndex = 0;
-            while(correspondingPlatformIndex < N_PLATFORMS && platforms[correspondingPlatformIndex] != NULL && enemies[i]->getY() != platforms[correspondingPlatformIndex]->getY() - 1) //finds enemy's corresponding platform, possible function
+            if(enemies[i]->getExistence())
             {
-                correspondingPlatformIndex++;
-            }
-            if(platforms[correspondingPlatformIndex]->getStartingPointX() > enemies[i]->getXAfterMove() || platforms[correspondingPlatformIndex]->getEndingPointX() < enemies[i]->getXAfterMove())
-            {
-                enemies[i]->reverseDirection();
-            }
-            else
-            {
-                enemies[i]->move();
+                correspondingPlatformIndex = 0;
+                while(correspondingPlatformIndex < N_PLATFORMS && platforms[correspondingPlatformIndex] != NULL && enemies[i]->getY() != platforms[correspondingPlatformIndex]->getY() - 1) //finds enemy's corresponding platform, possible function
+                {
+                    correspondingPlatformIndex++;
+                }
+                if(platforms[correspondingPlatformIndex]->getStartingPointX() > enemies[i]->getXAfterMove() || platforms[correspondingPlatformIndex]->getEndingPointX() < enemies[i]->getXAfterMove())
+                {
+                    enemies[i]->reverseDirection();
+                }
+                else
+                {
+                    enemies[i]->move();
+                }
             }
         }
         enemiesUpdated = true;
@@ -308,6 +317,44 @@ void Level::exitLevel(int index)
     }
 }
 
+int Level::findTurretIndex(Player *player)
+{
+    int turretIndex = 0;
+    bool turretPresent = false;
+    while(turretIndex < N_TURRETS && turrets[turretIndex] != NULL && !turretPresent)
+    {
+        if(turrets[turretIndex]->getY() == player->getY())
+        {
+            turretPresent = true;
+        }
+        if(!turretPresent)
+        {
+            turretIndex++;
+        }
+    } //FINDTURRETINDEX FUNC
+    int index = turretPresent ? turretIndex : -1;
+    return index;
+}
+
+int Level::findEnemyIndex(Player *player)
+{
+    bool enemyPresent = false;
+    int enemyIndex = 0;
+    while(enemyIndex < N_ENEMIES && enemies[enemyIndex] != NULL && !enemyPresent)
+    {
+        if(enemies[enemyIndex]->getY() == player->getY())
+        {
+            enemyPresent = true;
+        }
+        if(!enemyPresent)
+        {
+            enemyIndex++;
+        }
+    }
+    int index = enemyPresent ? enemyIndex : -1;
+    return index;
+}
+
 void Level::playerUpdate(Player *player, int keyPressed, int index)
 {
     bool sideMove = keyPressed == ERR ? false : true; //if nothing is pressed then there is no move, so the move is not a side move
@@ -320,7 +367,7 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
     {
         heightIndex -= 2;
         platformIndex++;
-    } //CREATE PLATFORMON(SINGLEBLOCKENTITY ENTITY) FUNC
+    }
 
     //Handle vertical moves
     if(keyPressed == 'w' && platformIndex + 1 < currentPlatforms) //Useless to check for upper platforms if player is at the top (platformIndex + 1 because platformIndex starts from 0)
@@ -333,10 +380,10 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
         }
         sideMove = false;
     }
-    else if(keyPressed == 's' && platformIndex > -1) //Useless to check for platforms under player if player is not on a platform (platformIndex > -1 because platformIndex starts indicating that some platform exists from the value 0 on)
+    else if(keyPressed == 's' && platformIndex > -1) //Useless to check for platforms under player if player is not on a platform (platformIndex > -1 because platformIndex starts indicating that some surface exists under the player from the value 0 on)
     {
         bool allowedDownMove = false;
-        if(platformIndex == 0)
+        if(platformIndex == 0) //If at first platform, player can always go down
         {
             allowedDownMove = true;
         }
@@ -353,18 +400,19 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
         sideMove = false;
     }
 
-    //check if move legal
-    bool sideMoveIsLegal = true; //(not legal => player will not move to the left or right) <=> legal checks for right and left moves at border
+    //Check if side move is legal
+    bool sideMoveIsLegal = true; //Not legal => player will not move to the left or right
     int playerXAfterMove = player->getXAfterMove(keyPressed);
-    if(platformIndex != -1 && (playerXAfterMove == width || playerXAfterMove == 0 || platforms[platformIndex]->getStartingPointX() > playerXAfterMove || platforms[platformIndex]->getEndingPointX() < playerXAfterMove)) //Checks if player is on a platform (therefore subject to possible bullet collisions) and if the move will result in not moving, which is true only if the player is trying to get off the platform without using KEY_DOWN/s/S or if it is at a map border //REMEMBER TO CREATE NEW BOOL FUNCS FOR BOTH BORDER AND PLATFORM CONDITIONS (ALREADY DECLARED)
+    if(platformIndex != -1 && (playerXAfterMove == width || playerXAfterMove == 0 || platforms[platformIndex]->getStartingPointX() > playerXAfterMove || platforms[platformIndex]->getEndingPointX() < playerXAfterMove)) //Checks if player is on a platform (therefore subject to possible bullet/enemy collisions) and if the move will result in not moving, which is true only if the player is trying to get off the platform without using KEY_DOWN/s/S or if it is at a map border
     {
         sideMoveIsLegal = false;
     }
 
-    //Handles cases of bullet collision
-    int turretIndex = 0;
     int currentBulletDirection;
-    while(turretIndex < N_TURRETS && turrets[turretIndex] != NULL && platformIndex != -1)
+    int turretIndex = (platformIndex == -1 && !changedPlatform) ? -1 : findTurretIndex(player); //Condition
+    
+    //First bullet collision check
+    if(turretIndex != -1)
     {
         currentBulletDirection = turrets[turretIndex]->getBulletDirection();
         if(turrets[turretIndex]->isBulletColliding(*player))
@@ -372,21 +420,22 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
             if((currentBulletDirection == 1 && keyPressed != 'd') || (currentBulletDirection == -1 && keyPressed != 'a') || !sideMoveIsLegal)
             {
                 turrets[turretIndex]->hitPlayer(player);
+                turrets[turretIndex]->resetBullet();
             }
         }
-        turretIndex++;
     }
 
     //Check what sideMove will change
     int xChange = sideMove ? (sideMoveIsLegal ? (abs(player->getX() - player->getXAfterMove(keyPressed))) : 0) : 0; //If the move is not a side move then there will be no change in the x coordinate of the player
 
-    //Handles cases of enemy collision
-    int enemyIndex = 0;
     int currentEnemyDirection;
-    while(enemyIndex < N_ENEMIES && enemies[enemyIndex] != NULL && platformIndex != -1)
+    int enemyIndex = (platformIndex == -1 && !changedPlatform) ? -1 : findEnemyIndex(player);
+
+    //First enemy collision check
+    if(enemyIndex != -1)
     {
         currentEnemyDirection = enemies[enemyIndex]->getDirection();
-        if((enemies[enemyIndex]->isColliding(*player)))
+        if(enemies[enemyIndex]->getExistence() && enemies[enemyIndex]->isColliding(*player))
         {
             if(((currentEnemyDirection == 1 && keyPressed != 'd') || (currentEnemyDirection == -1 && keyPressed != 'a') || !sideMoveIsLegal) && !changedPlatform)
             {
@@ -397,9 +446,9 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
                 enemies[enemyIndex]->deactivate();
             }
         }
-        enemyIndex++;
     }
     
+    //Player move
     if(sideMoveIsLegal && keyPressed == 'd')
     {
         player->move('d');
@@ -409,25 +458,35 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
         player->move('a');
     }
 
-    enemyIndex = 0;
-    while(enemyIndex < N_ENEMIES && enemies[enemyIndex] != NULL && platformIndex != -1)
-    {
-        currentEnemyDirection = enemies[enemyIndex]->getDirection();
-        if((enemies[enemyIndex]->isColliding(*player)))
-        {
-            enemies[enemyIndex]->hitPlayer(player);
-        }
-        enemyIndex++;
-    }
-    turretIndex = 0;
-    while(turretIndex < N_TURRETS && turrets[turretIndex] != NULL && platformIndex != -1)
+    //Second bullet collision check
+    if(turretIndex != -1)
     {
         currentBulletDirection = turrets[turretIndex]->getBulletDirection();
         if(turrets[turretIndex]->isBulletColliding(*player))
         {
             turrets[turretIndex]->hitPlayer(player);
+            turrets[turretIndex]->resetBullet();
         }
-        turretIndex++;
     }
 
+    //Second enemy collision check
+    if(enemyIndex != -1)
+    {
+        currentEnemyDirection = enemies[enemyIndex]->getDirection();
+        if(enemies[enemyIndex]->getExistence() && enemies[enemyIndex]->isColliding(*player))
+        {
+            enemies[enemyIndex]->hitPlayer(player);
+        }
+    }
+
+    //Bonus check
+    int bonusIndex = 0;
+    while(bonusIndex < N_BONUSES && bonuses[bonusIndex] != NULL && !(platformIndex == -1 && !changedPlatform))
+    {
+        if(bonuses[bonusIndex]->getExistence() && bonuses[bonusIndex]->isColliding(*player))
+        {
+            bonuses[bonusIndex]->use(player);
+        }
+        bonusIndex++;
+    }
 }

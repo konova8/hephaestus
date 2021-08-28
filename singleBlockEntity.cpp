@@ -36,7 +36,7 @@ int SingleBlockEntity::getYAfterMove(int yChange)
 
 bool SingleBlockEntity::isColliding(SingleBlockEntity entity, int xChange, int yChange)
 {
-    return ((this->x == entity.getX() && this->y == entity.getY()) || (this->x == entity.getXAfterMove(xChange) && this->y == entity.getYAfterMove(yChange)));
+    return ((this->x == entity.getX() && this->y == entity.getY()));
 }
 
 void SingleBlockEntity::print()

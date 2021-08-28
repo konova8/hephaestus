@@ -64,7 +64,7 @@ int convertMove(int keyPressed)
 
 int main() {
     //EVERYTHING HERE IS FOR TESTING AT THE MOMENT,  REAL MAIN WILL BE IMPLEMENTED LATER
-    int testIndex = 8;
+    int testIndex = 3;
     srand(time(0));
     Level myLevel(testIndex);
     Player player(1, myLevel.getHeight() - 1, '$');

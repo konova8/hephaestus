@@ -24,4 +24,5 @@ void Bonus::use(Player *player)
     {
         player->pointsChange(bonusEffect);
     }
+    SingleBlockEntity::deactivate();
 }

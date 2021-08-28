@@ -45,6 +45,8 @@ class Level
         void drawBorders(int index);
         void setPlatforms(int index);
         void setEntities(int index);
+        int findTurretIndex(Player *player);
+        int findEnemyIndex(Player *player);
         bool checkEnemyCollisions1(Player *player, bool sideMoveIsLegal, bool changedPlatform, int enemyIndex, int keyPressed);
         bool checkEnemyCollisions2(Player *player, int enemyIndex);
         bool checkBulletCollisions2(Player player, int xChange, int correspondingTurretIndex);
