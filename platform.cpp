@@ -15,19 +15,19 @@ Platform::Platform(int startingPointX, int endingPointX, int y, char symbol)
 }
 
 int Platform::getStartingPointX(){
-    return(this->startingPointX);
+    return this->startingPointX;
 }
 
 int Platform::getEndingPointX(){
-    return(this->endingPointX);
+    return this->endingPointX;
 }
 
 int Platform::getY(){
-    return(this->y);
+    return this->y;
 }
 
-bool Platform::isEntityUnderPlatform(int entit_y){
-    return (getY() - 1 == entit_y);
+bool Platform::isEntityUnderPlatform(int entityY){
+    return (getY() - 1 == entityY);
 }
 
 void Platform::print()

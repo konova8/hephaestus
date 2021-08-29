@@ -3,6 +3,7 @@
 Turret::Turret(int x, int y, bool exists, char symbol) : SingleBlockEntity(x, y, exists, symbol)
 {
     int bulletDirection;
+    //Constructor assumes turret can only be placed at level walls
     if(this->x == 1)
     {
         bulletDirection = 1;

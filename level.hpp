@@ -21,6 +21,7 @@
 class Level
 {
     protected:
+        int index;
         struct updateData
         {
             int updateCounter;
@@ -44,22 +45,22 @@ class Level
         int randomInRange(int min, int max);
         void initializeEntitiesLists();
         bool isPlayerMoveLegal(Player player, int keyPressed);
-        void drawBorders(int index);
-        void setPlatforms(int index);
+        void drawBorders();
+        void setPlatforms();
         bool entityGenerationCheck(bool allEntities, int remainingPlatforms, int entitiesSpawned, int entitiesToBeSpawned, int chance);
-        void setEntities(int index);
+        void setEntities();
         int findTurretIndex(Player *player);
         int findEnemyIndex(Player *player);
     public:
         Level(int index = 1);
         int getWidth();
         int getHeight();
-        void drawLevel(Player player, int index);
+        void drawLevel(Player player);
         void updateLevel();
-        int isAtBottomBorder(); //Returns 1 if player is at right bottom border, 0 if it is not at a bottom border, -1 if it is at the left bottom border
-        void exitLevel(int index);
-        void playerUpdate(Player *player, int keyPressed, int index);
+        void exitLevel();
+        void playerUpdate(Player *player, int keyPressed);
         int isPlayerAtBorder(Player player); //Returns -1 if player is at left border, 1 if player is at right border, 0 if it is not at any border
+        int getIndex();
         
 };
 

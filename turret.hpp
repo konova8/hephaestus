@@ -14,7 +14,7 @@ class Turret : public SingleBlockEntity
         void resetBullet(); //Brings the bullet back to the turret position
         int getBulletDirection();
         int getBulletX();
-        bool isBulletColliding(SingleBlockEntity entity);
+        bool isBulletColliding(SingleBlockEntity entity); //Checks if the bullet is colliding with an entity
         void printBullet();
         void hitPlayer(Player *player);
 };

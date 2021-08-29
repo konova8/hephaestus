@@ -8,22 +8,28 @@
 using namespace std;
 
 struct mapNode {
-    int index;
     mapNode *prev;
     Level *level;
     mapNode *next;
     mapNode(int index, mapNode *previousNode = NULL, mapNode *nextNode = NULL)
     {
-        this->index = index;
         this->prev = previousNode;
         this->level = new Level(index);
         this->next = nextNode;
     }
 };
 
-mapNode *newNode(mapNode *currentNode)
+mapNode *newNode(mapNode *currentNode, int direction)
 {
-    mapNode *newNode = new mapNode(currentNode->index + 1, currentNode);
+    mapNode *newNode;
+    if(direction == 1)
+    {
+        newNode = new mapNode(currentNode->level->getIndex() + 1, currentNode);
+    }
+    else if(direction == -1)
+    {
+        newNode = new mapNode(currentNode->level->getIndex() - 1, NULL, currentNode);
+    }
     return newNode;
 }
 
@@ -59,30 +65,6 @@ int convertMove(int keyPressed)
         case 'Q':
             newKeyPressed = 'q';
     }
-    // if(keyPressed == 'w' || keyPressed == 'W' || keyPressed == KEY_UP)
-    // {
-    //     newKeyPressed = 'w';
-    // }
-    // else if(keyPressed == 's' || keyPressed == 'S' || keyPressed == KEY_DOWN)
-    // {
-    //     newKeyPressed = 's';
-    // }
-    // else if(keyPressed == 'd' || keyPressed == 'd' || keyPressed == KEY_RIGHT)
-    // {
-    //     newKeyPressed = 'd';
-    // }
-    // else if(keyPressed == 'a' || keyPressed == 'A' || keyPressed == KEY_LEFT)
-    // {
-    //     newKeyPressed = 'a';
-    // }
-    // else if(keyPressed == 'q' || keyPressed == 'Q')
-    // {
-    //     newKeyPressed = 'q';
-    // }
-    // else
-    // {
-    //     newKeyPressed = ERR;
-    // }
     return newKeyPressed;
 }
 
@@ -110,7 +92,7 @@ void sleepMs(int microseconds)
 
 int main() {
     srand(time(0));
-    mapNode *currentNode = new mapNode(1);
+    mapNode *currentNode = new mapNode(101);
     Player player(1, currentNode->level->getHeight() - 1, '$');
     system("setterm -cursor off"); //Removes console cursor
     initscr();
@@ -121,10 +103,10 @@ int main() {
     int playerAtBorder;
     while(k != 'q' && player.getHealth() > 0)
     {
-        currentNode->level->drawLevel(player, currentNode->index);
+        currentNode->level->drawLevel(player);
         k = convertMove(getch());
         currentNode->level->updateLevel();
-        currentNode->level->playerUpdate(&player, k, currentNode->index);
+        currentNode->level->playerUpdate(&player, k);
         if(k == 'd' || k == 'a')
         {
             playerAtBorder = currentNode->level->isPlayerAtBorder(player);
@@ -132,14 +114,14 @@ int main() {
             {
                 if(currentNode->next == NULL)
                 {
-                    currentNode->next = newNode(currentNode);
+                    currentNode->next = newNode(currentNode, 1);
                 }
                 currentNode = currentNode->next;
                 movePlayerTo('s', &player, *currentNode->level);
             }
             else if(playerAtBorder == -1)
             {
-                if(currentNode->index == 1)
+                if(currentNode->level->getIndex() == 1)
                 {
                     k = 'q';
                 }
@@ -147,7 +129,7 @@ int main() {
                 {
                     if(currentNode->prev == NULL)
                     {
-                        currentNode->prev = new mapNode(currentNode->index - 1, NULL, currentNode);
+                        currentNode->prev = newNode(currentNode, -1);
                     }
                     currentNode = currentNode->prev;
                     movePlayerTo('e', &player, *currentNode->level);

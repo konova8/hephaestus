@@ -15,8 +15,8 @@ class Player : public SingleBlockEntity
         int getYAfterMove(int keyPressed); //Returns the y after the key pressed
         void move(int keyPressed); //Moves based on the key pressed, use SingleBlockEntity::move
         using SingleBlockEntity::move;
-        void healthChange(int change); //Self explanatory
-        void pointsChange(int change); //Self explanatory
+        void pointsChange(int change);
+        void healthChange(int change);
         int getHealth(); 
         int getPoints();
 };

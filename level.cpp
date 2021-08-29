@@ -7,6 +7,7 @@ using namespace std;
 
 Level::Level(int index)
 {
+    this->index = index;
     this->width = 40;
     this->height = 15;
     this->turretsUpdate.updateTime = 20 - index < MIN_BULLET_UPDATE ? MIN_BULLET_UPDATE : 20 - index;
@@ -17,8 +18,8 @@ Level::Level(int index)
         strcat(this->spaces, " ");
     }
     initializeEntitiesLists();
-    setPlatforms(index);
-    setEntities(index);
+    setPlatforms();
+    setEntities();
 }
 
 int Level::randomInRange(int min, int max)
@@ -52,7 +53,7 @@ void Level::initializeEntitiesLists()
     }
 }
 
-void Level::drawBorders(int index)
+void Level::drawBorders()
 {
     for(int i = 1; i < this->width; i++)
     {
@@ -79,7 +80,7 @@ void Level::drawBorders(int index)
     }
 }
 
-void Level::setPlatforms(int index)
+void Level::setPlatforms()
 {
     int platformsToBuild = index > N_PLATFORMS ? N_PLATFORMS : index;
     int startingX = -1, y = this->height - 2, endingX = -1, minimumLength = 5;
@@ -169,7 +170,7 @@ bool Level::entityGenerationCheck(bool allEntities, int remainingPlatforms, int 
 
 }
 
-void Level::setEntities(int index)
+void Level::setEntities()
 {
     int turretsBuilt = 0, enemiesSpawned = 0, bonusesSpawned = 0;
     int turretIndex = 0, enemyIndex = 0, bonusIndex = 0;
@@ -238,13 +239,18 @@ int Level::getHeight()
     return this->height;
 }
 
-void Level::drawLevel(Player player, int index)
+int Level::getIndex()
+{
+    return this->index;
+}
+
+void Level::drawLevel(Player player)
 {
     if(needsDraw)
     {
         clear();
         printw("%sPoints: %d\n%sHealth: %d\n%sLevel: %d", this->spaces, player.getPoints(), this->spaces, player.getHealth(), this->spaces, index);
-        drawBorders(index);
+        drawBorders();
         for(int i = 0; i < N_PLATFORMS && platforms[i] != NULL; i++)
         {
             platforms[i]->print();
@@ -353,7 +359,7 @@ void Level::updateLevel()
     }
 }
 
-void Level::exitLevel(int index)
+void Level::exitLevel()
 {
     for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++)
     {
@@ -399,7 +405,7 @@ int Level::findEnemyIndex(Player *player)
     return index;
 }
 
-void Level::playerUpdate(Player *player, int keyPressed, int index)
+void Level::playerUpdate(Player *player, int keyPressed)
 {
     bool sideMove = keyPressed == ERR ? false : true; //If nothing is pressed then there is no move, so the move is not a side move.
     bool changedPlatform = false; //Needed to determine when to kill an enemy.
