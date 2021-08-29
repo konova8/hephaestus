@@ -92,7 +92,7 @@ void sleepMs(int microseconds)
 
 int main() {
     srand(time(0));
-    mapNode *currentNode = new mapNode(101);
+    mapNode *currentNode = new mapNode(1);
     Player player(1, currentNode->level->getHeight() - 1, '$');
     system("setterm -cursor off"); //Removes console cursor
     initscr();
@@ -138,6 +138,7 @@ int main() {
         }
         sleepMs(33);
     }
-    endwin();
+    echo();
     system("setterm -cursor on"); //Removes console cursor
+    endwin();
 }
