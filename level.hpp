@@ -46,6 +46,7 @@ class Level
         bool isPlayerMoveLegal(Player player, int keyPressed);
         void drawBorders(int index);
         void setPlatforms(int index);
+        bool entityGenerationCheck(bool allEntities, int remainingPlatforms, int entitiesSpawned, int entitiesToBeSpawned, int chance);
         void setEntities(int index);
         int findTurretIndex(Player *player);
         int findEnemyIndex(Player *player);

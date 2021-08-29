@@ -12,7 +12,7 @@ Level::Level(int index)
     this->turretsUpdate.updateTime = 20 - index < MIN_BULLET_UPDATE ? MIN_BULLET_UPDATE : 20 - index;
     this->enemiesUpdate.updateTime = 20 - index < MIN_ENEMY_UPDATE ? MIN_ENEMY_UPDATE : 20 - index;
     this->needsDraw = true;
-    for(int i = 0; i < width + 1; i++)
+    for(int i = 0; i < width + 1; i++) //Creates the space needed to print statistics based on the level width
     {
         strcat(this->spaces, " ");
     }
@@ -85,10 +85,16 @@ void Level::setPlatforms(int index)
     int startingX = -1, y = this->height - 2, endingX = -1, minimumLength = 5;
     for(int i = 0; i < platformsToBuild; i++)
     {
+        //If i == 0, then the x starting point of the platform can be everywhere
         if(i == 0)
         {
             startingX = randomInRange(10, width - 10);
         }
+        /* If i != 0, then the x starting point of the platform must be
+        /* between the x starting and ending point of the last platform built
+        /* This allows for the player to be on a platform and always be able to reach the
+        /* one under and on top of it
+        */
         else
         {
             if(endingX < startingX)
@@ -100,6 +106,7 @@ void Level::setPlatforms(int index)
                 startingX = randomInRange(0, endingX - startingX) + startingX;
             }
         }
+        //If the x starting point is in the left part of the level, the ending point will be to its right
         if(startingX < width / 2)
         {
             do
@@ -108,6 +115,7 @@ void Level::setPlatforms(int index)
             }
             while(endingX == startingX);
         }
+        //If the x starting point is in the right part of the level, the ending point will be to its left
         else
         {
             do
@@ -121,22 +129,67 @@ void Level::setPlatforms(int index)
     }
 }
 
+bool Level::entityGenerationCheck(bool allEntities, int remainingPlatforms, int entitiesSpawned, int entitiesToBeSpawned, int chance)
+{
+    /* The entities generation is designed in a way that makes the entities
+    /* able to spawn on every platform (with only one entity of each type per platform max)
+    /* but with different probabilities, the following conditions allow to do what was
+    /* just explained
+    /* 
+    /* 
+    /* Entity generation check conditions
+    /*
+    /* (allEntities && remainingPlatforms <= entitiesToBeSpawned)
+    /* If this condition is
+    /* true then all entities should be built and the number of platforms doesn't
+    /* allow for one entity not to be spawned in the current one. If it were to allow
+    /* it, then the final number of entities spawned would be less than the number of
+    /* entities to be spawned.
+    /*
+    /* (allEntities && remainingPlatforms > entitiesToBeSpawned && randomInRange(1, 10) > chance || !allEntities)
+    /* If this condition is true, then we have two cases:
+    /* 1) !allEntities --> If not all entities should be built, then the condition is true and the entity will be built,
+    /*    because in every level where this condition is true the number of platforms is equal to the number of that type
+    /*    of entities to be spawned, which means that every platform should have one entity of that type on itself.
+    /* 2) allEntities && remainingPlatforms > entitiesToBeSpawned && randomInRange(1, 10) > chance
+    /*    If this condition is true, then the max number of entities should be built but the current number
+    /*    of remaining platforms allows for the current platform not to have a entity of that type on itself.
+    /*    randomInRange(1, 10) > chance is used to generate randomness in the levels and not make all entities
+    /*    spawn at the top platforms
+    /* 
+    /* In all of these cases, another condition must be satisfied: entitiesSpawned < entitiesToBeSpawned, which is self explanatory.
+    /* 
+    */
+    bool generate = false;
+    if(((allEntities && remainingPlatforms <= entitiesToBeSpawned) || (allEntities && remainingPlatforms > entitiesToBeSpawned && randomInRange(1, 10) > chance || !allEntities)) && entitiesSpawned < entitiesToBeSpawned)
+    {
+        generate = true;
+    }
+    return generate;
+
+}
+
 void Level::setEntities(int index)
 {
-    bool allTurrets = index > N_TURRETS;
-    bool allEnemies = index > N_ENEMIES;
-    bool allBonuses = index > N_BONUSES;
     int turretsBuilt = 0, enemiesSpawned = 0, bonusesSpawned = 0;
-    int turretsToBeBuilt = allTurrets ? N_TURRETS : index;
-    int enemiesToBeSpawned = allEnemies ? N_ENEMIES : index;
-    int bonusesToBeSpawned = allBonuses ? N_BONUSES : index;
-    int currentPlatforms = index > N_PLATFORMS ? N_PLATFORMS : index;
     int turretIndex = 0, enemyIndex = 0, bonusIndex = 0;
+
+    bool allTurrets = index > N_TURRETS; //Indicates if all the possible turrets should be built
+    bool allEnemies = index > N_ENEMIES; //Indicates if all the possible enemies should be spawned
+    bool allBonuses = index > N_BONUSES; //Indicates if all the possible bonuses should be spawned
+
+    int turretsToBeBuilt = allTurrets ? N_TURRETS : index; //Indicates the number of turrets to build
+    int enemiesToBeSpawned = allEnemies ? N_ENEMIES : index; //Indicates the number of enemies to spawn
+    int bonusesToBeSpawned = allBonuses ? N_BONUSES : index; //Indicates the number of bonuses to spawn
+    int currentPlatforms = index > N_PLATFORMS ? N_PLATFORMS : index; //Indicates number of platforms in the current level
+
+    //Indicates the damage each enemy should be assigned in the current level
     int enemiesDamage = MIN_DAMAGE > index ? MIN_DAMAGE : (MAX_DAMAGE < index ? MAX_DAMAGE : index);
+    
+    //For each platform, each entity will have a chance to spawn (therefore, there will always be at most only one entity of each type on a platform)
     for(int i = 0; i < currentPlatforms; i++)
     {
-        //if(all turrets should be built and I have the same number of platforms as turrets) or if(all turrets should be built but the number of platforms allows for the current platform not to have a turret and random chance) or if(not all turrets should be built and therefore the turrets to be built equals the number of platforms) and in all these cases IF the turrets already built are less than the total to be built then build turret at current platform level
-        if(((allTurrets && currentPlatforms - i <= turretsToBeBuilt) || (allTurrets && currentPlatforms - i > turretsToBeBuilt && randomInRange(1, 10) > 7 || !allTurrets)) && turretsBuilt < turretsToBeBuilt)
+        if(entityGenerationCheck(allTurrets, currentPlatforms - i, turretsBuilt, turretsToBeBuilt, 7))
         {
             if(randomInRange(1, 10) > 5)
             {
@@ -149,14 +202,14 @@ void Level::setEntities(int index)
             turretIndex++;
             turretsBuilt++;
         }
-        if(((allEnemies && currentPlatforms - i <= enemiesToBeSpawned) || (allEnemies && currentPlatforms - i > enemiesToBeSpawned && randomInRange(1, 10) > 3 || !allEnemies)) && enemiesSpawned < enemiesToBeSpawned)
+        if(entityGenerationCheck(allEnemies, currentPlatforms - i, enemiesSpawned, enemiesToBeSpawned, 3))
         {
             int enemiesDirection = randomInRange(1, 10) > 5 ? 1 : -1;
             enemies[enemyIndex] = new Enemy(randomInRange(platforms[i]->getStartingPointX(), platforms[i]->getEndingPointX()), platforms[i]->getY() - 1, enemiesDirection, enemiesDamage, '@');
             enemyIndex++;
             enemiesSpawned++;
         }
-        if(((allBonuses && currentPlatforms - i <= bonusesToBeSpawned) || (allBonuses && currentPlatforms - i > bonusesToBeSpawned && randomInRange(1, 10) > 8 || !allBonuses)) && bonusesSpawned < bonusesToBeSpawned)
+        if(entityGenerationCheck(allBonuses, currentPlatforms - i, bonusesSpawned, bonusesToBeSpawned, 8))
         {
             char bonusType = randomInRange(1, 10) > 2 ? 'p' : 'h';
             int bonusEffect;
@@ -210,8 +263,9 @@ void Level::drawLevel(Player player, int index)
                 enemies[i]->print();
             }
         }
-        for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++) //Doesn't check for existence because turrets can't be destroyed
+        for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++)
         {
+            //Doesn't check for existence because turrets can't be destroyed
             turrets[i]->printBullet();
             turrets[i]->print();
         }
@@ -223,11 +277,15 @@ void Level::drawLevel(Player player, int index)
 void Level::updateLevel()
 {
     bool turretsUpdated = false, enemiesUpdated = false;
+    
+    //Update bullets
     if(turretsUpdate.updateCounter % turretsUpdate.updateTime == 0)
     {
         for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++)
         {
             turrets[i]->updateBullet();
+
+            //If the bullet is at its border, then reset it
             if((turrets[i]->getBulletX() == 0 && turrets[i]->getBulletDirection() == -1) || (turrets[i]->getBulletX() == this->width && turrets[i]->getBulletDirection() == 1))
             {
                 turrets[i]->resetBullet();
@@ -240,17 +298,23 @@ void Level::updateLevel()
         int correspondingPlatformIndex;
         for(int i = 0; i < N_ENEMIES && enemies[i] != NULL; i++)
         {
+            //Only update enemy if it has not been killed
             if(enemies[i]->getExistence())
             {
                 correspondingPlatformIndex = 0;
+                
+                //Find index of the platform the enemy is on
                 while(correspondingPlatformIndex < N_PLATFORMS && platforms[correspondingPlatformIndex] != NULL && enemies[i]->getY() != platforms[correspondingPlatformIndex]->getY() - 1)
                 {
                     correspondingPlatformIndex++;
                 }
+
+                //Reverse the direction of the enemy if it is going out of the platform
                 if(platforms[correspondingPlatformIndex]->getStartingPointX() > enemies[i]->getXAfterMove() || platforms[correspondingPlatformIndex]->getEndingPointX() < enemies[i]->getXAfterMove())
                 {
                     enemies[i]->reverseDirection();
                 }
+                //Otherwise move the enemy
                 else
                 {
                     enemies[i]->move();
@@ -259,6 +323,8 @@ void Level::updateLevel()
         }
         enemiesUpdated = true;
     }
+
+    //Time control
     if(turretsUpdated)
     {
         turretsUpdate.updateCounter = 1;
@@ -275,6 +341,8 @@ void Level::updateLevel()
     {
         enemiesUpdate.updateCounter++;
     }
+
+    //If the enemies or the bullets were updated, a redraw is needed
     if(enemiesUpdated || turretsUpdated)
     {
         this->needsDraw = true;
@@ -307,7 +375,7 @@ int Level::findTurretIndex(Player *player)
         {
             turretIndex++;
         }
-    } //FINDTURRETINDEX FUNC
+    }
     int index = turretPresent ? turretIndex : -1;
     return index;
 }
@@ -333,10 +401,10 @@ int Level::findEnemyIndex(Player *player)
 
 void Level::playerUpdate(Player *player, int keyPressed, int index)
 {
-    bool sideMove = keyPressed == ERR ? false : true; //if nothing is pressed then there is no move, so the move is not a side move
-    bool changedPlatform = false; //Useful for enemy kill
+    bool sideMove = keyPressed == ERR ? false : true; //If nothing is pressed then there is no move, so the move is not a side move.
+    bool changedPlatform = false; //Needed to determine when to kill an enemy.
 
-    //determine what platform the player is on
+    //Determine what platform the player is on.
     int currentPlatforms = index > N_PLATFORMS ? N_PLATFORMS : index;
     int heightIndex = this->height - 1, platformIndex = -1;
     while(player->getY() != heightIndex)
@@ -345,9 +413,10 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
         platformIndex++;
     }
 
-    //Handle vertical moves
-    if(keyPressed == 'w' && platformIndex + 1 < currentPlatforms) //Useless to check for upper platforms if player is at the top (platformIndex + 1 because platformIndex starts from 0)
+    //Handle and perform vertical moves
+    if(keyPressed == 'w' && platformIndex + 1 < currentPlatforms) //Useless to check for upper platforms if player is at the top
     {
+        //Check if the block at the top of the player belongs to the platform at the top of the player. If it does, perform the move.
         if(player->getX() >= platforms[platformIndex + 1]->getStartingPointX() && player->getX() <= platforms[platformIndex + 1]->getEndingPointX())
         {
             player->move(keyPressed);
@@ -357,17 +426,23 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
         }
         sideMove = false;
     }
-    else if(keyPressed == 's' && platformIndex > -1) //Useless to check for platforms under player if player is not on a platform (platformIndex > -1 because platformIndex starts indicating that some surface exists under the player from the value 0 on)
+    else if(keyPressed == 's' && platformIndex > -1) //Useless to check for platforms under player if player is not on the ground
     {
         bool allowedDownMove = false;
-        if(platformIndex == 0) //If at first platform, player can always go down
+
+        //If at first platform, the player can always go down
+        if(platformIndex == 0)
         {
             allowedDownMove = true;
         }
+
+        //Otherwise, check if the block under the player belongs to the platform under the player.
         else if((player->getX() >= platforms[platformIndex - 1]->getStartingPointX() && player->getX() <= platforms[platformIndex - 1]->getEndingPointX()))
         {
             allowedDownMove = true;
         }
+
+        //If the move is allowed, perform it
         if(allowedDownMove)
         {
             player->move(keyPressed);
@@ -381,15 +456,50 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
     //Check if side move is legal
     bool platformSideMoveLegal = true; //Not legal => player will not move to the left or right
     int playerXAfterMove = player->getXAfterMove(keyPressed);
-    if(platformIndex != -1 && (playerXAfterMove == width || playerXAfterMove == 0 || platforms[platformIndex]->getStartingPointX() > playerXAfterMove || platforms[platformIndex]->getEndingPointX() < playerXAfterMove)) //Checks if player is on a platform (therefore subject to possible bullet/enemy collisions) and if the move will result in not moving, which is true only if the player is trying to get off the platform without using KEY_DOWN/s/S or if it is at a map border
+
+    if(platformIndex != -1 && //If the player is on the ground, don't check for legality of platform side move, next conditions assume the player is on a platform
+    (playerXAfterMove == width || //If the x after the move is the width, the move is illegal
+    playerXAfterMove == 0 || //If the x after the move is 0, the move is illegal
+    platforms[platformIndex]->getStartingPointX() > playerXAfterMove //If the x after the move is not on the platform, the move is illegal
+    || platforms[platformIndex]->getEndingPointX() < playerXAfterMove)) //If the x after the move is not on the platform, the move is illegal
     {
         platformSideMoveLegal = false;
     }
 
     int currentBulletDirection;
+
+    /* A value of -1 of turretIndex indicates there is no turret at the current y of the player
+    /*
+    /* If platformIndex before a up/down move is -1 and the platform has not changed
+    /* then the player is on the ground, therefore there can not be a turret at its current y
+    /*
+    /* Otherwise, find the turret index of the turret at the y of the player and assign it
+    /* to turretIndex
+    /* 
+    /* enemyIndex assignment is completely analogous.
+    */
     int turretIndex = (platformIndex == -1 && !changedPlatform) ? -1 : findTurretIndex(player);
     
-    //First bullet collision check
+    /* First bullet collision check
+    /*
+    /* This collision check is for the case where a bullet
+    /* is colliding with the player, but the player's side
+    /* side move has not been performed yet, provided
+    /* the move was actually a side move, in the other case,
+    /* if the move was a up/down move, then it has already
+    /* been performed
+    /*
+    /* There are therefore two cases, the first one being
+    /* the player has made a side move, that has not yet been
+    /* performed, that allows him to escape the bullet
+    /*
+    /* In the other case the move goes in the opposite
+    /* direction of the bullet, making the two entities
+    /* collide
+    /*
+    /* The first collision check for the enemies
+    /* is completely analogous
+    */
     if(turretIndex != -1)
     {
         currentBulletDirection = turrets[turretIndex]->getBulletDirection();
@@ -403,9 +513,6 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
             }
         }
     }
-
-    //Check what sideMove will change
-    int xChange = sideMove ? (platformSideMoveLegal ? (abs(player->getX() - player->getXAfterMove(keyPressed))) : 0) : 0; //If the move is not a side move then there will be no change in the x coordinate of the player
 
     int currentEnemyDirection;
     int enemyIndex = (platformIndex == -1 && !changedPlatform) ? -1 : findEnemyIndex(player);
@@ -424,14 +531,14 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
             else if(changedPlatform)
             {
                 enemies[enemyIndex]->deactivate();
-                int toDivideBy = index < 5 ? 1 : (index > 200 ? 4 : 2);
+                int toDivideBy = index < 5 ? 1 : (index > 100 ? 4 : 2);
                 player->pointsChange((index * 5) / toDivideBy);
                 needsDraw = true;
             }
         }
     }
 
-    //Player move
+    //Perform player side move
     if(platformSideMoveLegal && keyPressed == 'd')
     {
         player->move('d');
@@ -443,7 +550,17 @@ void Level::playerUpdate(Player *player, int keyPressed, int index)
         needsDraw = true;
     }
 
-    //Second bullet collision check
+    /* Second bullet collision check
+    /*
+    /* The second bullet collision check allows to check
+    /* for the case where the bullet and the player are
+    /* colliding after the player has performed a side move
+    /*
+    /* It's a simple matter of checking if the x and the y of
+    /* the two entities are the same.
+    /* 
+    /* The second enemy collision check is completely analogous
+    */
     if(turretIndex != -1)
     {
         currentBulletDirection = turrets[turretIndex]->getBulletDirection();
