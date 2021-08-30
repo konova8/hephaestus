@@ -57,7 +57,7 @@ class Level
         void drawLevel(Player player);
         void updateLevel();
         void playerUpdate(Player *player, int keyPressed);
-        int isPlayerAtBorder(Player player); //Returns -1 if player is at left border, 1 if player is at right border, 0 if it is not at any border
+        int isPlayerAtBorder(Player player); //Returns -1 if player is at bottom left border, 1 if player is at bottom right border, 0 if it is not at any border
         int getIndex();
         
 };

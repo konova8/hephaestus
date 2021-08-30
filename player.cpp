@@ -49,19 +49,6 @@ int Player::getXAfterMove(int keyPressed){
     return xAfterMove;
 }
 
-int Player::getYAfterMove(int keyPressed){
-    int yAfterMove = 0;
-    if (keyPressed == 'w')
-    {
-        yAfterMove = SingleBlockEntity::getY() - 1;
-    }
-    else if (keyPressed == 's')
-    {
-        yAfterMove = SingleBlockEntity::getY() + 1;
-    }
-    return yAfterMove;
-}
-
 void Player::healthChange(int change){
     if(this->health + change > maxHealth)
     {

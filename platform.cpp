@@ -26,10 +26,6 @@ int Platform::getY(){
     return this->y;
 }
 
-bool Platform::isEntityUnderPlatform(int entityY){
-    return (getY() - 1 == entityY);
-}
-
 void Platform::print()
 {
     for(int i = this->startingPointX; i <= this->endingPointX; i++)

@@ -11,9 +11,8 @@ class Player : public SingleBlockEntity
         int points;
     public:
         Player(int x, int y, char symbol, int health = 100, int points = 0);
-        int getXAfterMove(int keyPressed); //Returns the x after the key pressed
-        int getYAfterMove(int keyPressed); //Returns the y after the key pressed
-        void move(int keyPressed); //Moves based on the key pressed, use SingleBlockEntity::move
+        int getXAfterMove(int keyPressed); //Returns the x after the move corresponding to the key pressed
+        void move(int keyPressed); //Moves based on the key pressed
         using SingleBlockEntity::move;
         void pointsChange(int change);
         void healthChange(int change);

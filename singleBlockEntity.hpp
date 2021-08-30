@@ -9,7 +9,7 @@ class SingleBlockEntity
         bool exists;
         char symbol;
     public:
-        SingleBlockEntity(int x = -1, int y = -1, bool exists = true, char symbol = ' ');
+        SingleBlockEntity(int x = -1, int y = -1, bool exists = true, char symbol = '0');
         int getX();
         int getY();
         bool getExistence();
