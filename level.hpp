@@ -44,7 +44,6 @@ class Level
         char spaces[100];
         int randomInRange(int min, int max);
         void initializeEntitiesLists();
-        bool isPlayerMoveLegal(Player player, int keyPressed);
         void drawBorders();
         void setPlatforms();
         bool entityGenerationCheck(bool allEntities, int remainingPlatforms, int entitiesSpawned, int entitiesToBeSpawned, int chance);
@@ -57,7 +56,6 @@ class Level
         int getHeight();
         void drawLevel(Player player);
         void updateLevel();
-        void exitLevel();
         void playerUpdate(Player *player, int keyPressed);
         int isPlayerAtBorder(Player player); //Returns -1 if player is at left border, 1 if player is at right border, 0 if it is not at any border
         int getIndex();

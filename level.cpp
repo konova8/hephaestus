@@ -359,14 +359,6 @@ void Level::updateLevel()
     }
 }
 
-void Level::exitLevel()
-{
-    for(int i = 0; i < N_TURRETS && turrets[i] != NULL; i++)
-    {
-        turrets[i]->resetBullet();
-    }
-}
-
 int Level::findTurretIndex(Player *player)
 {
     int turretIndex = 0;
