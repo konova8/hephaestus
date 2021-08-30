@@ -1,5 +1,6 @@
 #include "level.hpp"
 #include <cstdlib>
+#include <iostream> //Necessary for time(0)
 #include <ncurses.h>
 #include <string.h>
 
@@ -7,6 +8,7 @@ using namespace std;
 
 Level::Level(int index)
 {
+    srand(time(0));
     this->index = index;
     this->width = 40;
     this->height = 15;
