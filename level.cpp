@@ -139,8 +139,20 @@ bool Level::entityGenerationCheck(bool allEntities, int remainingPlatforms, int 
     /* but with different probabilities, the following conditions allow to do what was
     /* just explained
     /* 
-    /* 
     /* Entity generation check conditions
+    /*
+    /* In all of these cases, the condition entitiesSpawned < entitiesToBeSpawned must be satisfied, which is self explanatory.
+    /*
+    /* !allEntities
+    /* If not all entities should be built, then the condition is true and the entity will be built,
+    /* because in every level where this condition is true the number of platforms is equal to the number of that type
+    /* of entities to be spawned, which means that every platform should have one entity of that type on itself.
+    /*
+    /* (allEntities && remainingPlatforms > entitiesToBeSpawned && randomInRange(1, 10) > chance
+    /* If this condition is true, then the max number of entities should be built but the current number
+    /* of remaining platforms allows for the current platform not to have a entity of that type on itself.
+    /* randomInRange(1, 10) > chance is used to generate randomness in the levels and not make all entities
+    /* spawn at the top platforms
     /*
     /* (allEntities && remainingPlatforms <= entitiesToBeSpawned)
     /* If this condition is
@@ -148,25 +160,23 @@ bool Level::entityGenerationCheck(bool allEntities, int remainingPlatforms, int 
     /* allow for one entity not to be spawned in the current one. If it were to allow
     /* it, then the final number of entities spawned would be less than the number of
     /* entities to be spawned.
-    /*
-    /* (allEntities && remainingPlatforms > entitiesToBeSpawned && randomInRange(1, 10) > chance || !allEntities)
-    /* If this condition is true, then we have two cases:
-    /* 1) !allEntities --> If not all entities should be built, then the condition is true and the entity will be built,
-    /*    because in every level where this condition is true the number of platforms is equal to the number of that type
-    /*    of entities to be spawned, which means that every platform should have one entity of that type on itself.
-    /* 2) allEntities && remainingPlatforms > entitiesToBeSpawned && randomInRange(1, 10) > chance
-    /*    If this condition is true, then the max number of entities should be built but the current number
-    /*    of remaining platforms allows for the current platform not to have a entity of that type on itself.
-    /*    randomInRange(1, 10) > chance is used to generate randomness in the levels and not make all entities
-    /*    spawn at the top platforms
-    /* 
-    /* In all of these cases, another condition must be satisfied: entitiesSpawned < entitiesToBeSpawned, which is self explanatory.
     /* 
     */
     bool generate = false;
-    if(((allEntities && remainingPlatforms <= entitiesToBeSpawned) || (allEntities && remainingPlatforms > entitiesToBeSpawned && randomInRange(1, 10) > chance || !allEntities)) && entitiesSpawned < entitiesToBeSpawned)
+    if(entitiesSpawned < entitiesToBeSpawned)
     {
-        generate = true;
+        if(!allEntities)
+        {
+            generate = true;
+        }
+        else if(allEntities && remainingPlatforms > entitiesToBeSpawned && randomInRange(1, 10) > chance)
+        {
+            generate = true;
+        }
+        else if((allEntities && remainingPlatforms <= entitiesToBeSpawned))
+        {
+            generate = true;
+        }
     }
     return generate;
 
