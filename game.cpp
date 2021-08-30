@@ -107,6 +107,8 @@ int main() {
         k = convertMove(getch());
         currentNode->level->updateLevel();
         currentNode->level->playerUpdate(&player, k);
+
+        //If move is a side move, check if player is at end/start of level, and if it is, move it to the next/previous level
         if(k == 'd' || k == 'a')
         {
             playerAtBorder = currentNode->level->isPlayerAtBorder(player);
