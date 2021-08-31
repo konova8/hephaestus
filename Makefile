@@ -1,5 +1,5 @@
-final:
-	g++ *.cpp -o game -g -lncurses
+standard:
+	g++ *.cpp -o game -lncurses
 
-clean:
-	rm game
+debug:
+	g++ *.cpp -o game -g -lncurses
