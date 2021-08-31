@@ -10,27 +10,23 @@
 #define N_ENEMIES 4
 #define N_TURRETS 3
 #define N_BONUSES 2
-#define MIN_DAMAGE 10
-#define MAX_DAMAGE 100
-#define MAX_HEALTHBONUS 50
-#define MIN_HEALTHBONUS 5
-#define MIN_POINTSBONUS 10
-#define MIN_BULLET_UPDATE 3
-#define MIN_ENEMY_UPDATE 2
+
 
 class Level
 {
     protected:
+        const int minEnemyDamage = 10;
+        const int maxEnemyDamage = 100;
+        const int maxHealthBonus = 50;
+        const int minHealthBonus = 5;
+        const int minPointsBonus = 10;
+        const int minBullettUpdateTime = 3;
+        const int minEnemyUpdateTime = 2;
         int index;
         struct updateData
         {
-            int updateCounter;
+            int updateCounter = 1;
             int updateTime;
-            updateData(int updateTime = 15)
-            {
-                this->updateCounter = 0;
-                this->updateTime = updateTime;
-            }
         };
         Platform *platforms[N_PLATFORMS];
         Enemy *enemies[N_ENEMIES];
@@ -48,8 +44,8 @@ class Level
         void setPlatforms();
         bool entityGenerationCheck(bool allEntities, int remainingPlatforms, int entitiesSpawned, int entitiesToBeSpawned, int chance);
         void setEntities();
-        int findTurretIndex(Player *player);
-        int findEnemyIndex(Player *player);
+        int findTurretIndex(Player player);
+        int findEnemyIndex(Player player);
     public:
         Level(int index = 1);
         int getWidth();

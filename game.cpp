@@ -1,9 +1,9 @@
 #include <iostream>
 #include <ncurses.h>
 #include <cstdlib>
-#include "level.hpp"
-#include "player.hpp"
 #include <unistd.h>
+#include "player.hpp"
+#include "level.hpp"
 
 using namespace std;
 
@@ -11,24 +11,25 @@ struct mapNode {
     mapNode *prev;
     Level *level;
     mapNode *next;
-    mapNode(int index, mapNode *previousNode = NULL, mapNode *nextNode = NULL)
-    {
-        this->prev = previousNode;
-        this->level = new Level(index);
-        this->next = nextNode;
-    }
 };
+
+void initNode(mapNode *node, int index, mapNode *previousNode = NULL, mapNode *nextNode = NULL)
+{
+    node->prev = previousNode;
+    node->level = new Level(index);
+    node->next = nextNode;
+}
 
 mapNode *newNode(mapNode *currentNode, int direction)
 {
-    mapNode *newNode;
+    mapNode *newNode = new mapNode;
     if(direction == 1)
     {
-        newNode = new mapNode(currentNode->level->getIndex() + 1, currentNode);
+        initNode(newNode, currentNode->level->getIndex() + 1, currentNode);
     }
     else if(direction == -1)
     {
-        newNode = new mapNode(currentNode->level->getIndex() - 1, NULL, currentNode);
+        initNode(newNode, currentNode->level->getIndex() - 1, NULL, currentNode);
     }
     return newNode;
 }
@@ -91,7 +92,8 @@ void sleepMs(int microseconds)
 }
 
 int main() {
-    mapNode *currentNode = new mapNode(1);
+    mapNode *currentNode = new mapNode;
+    initNode(currentNode, 1);
     Player player(1, currentNode->level->getHeight() - 1, '$');
     system("setterm -cursor off"); //Removes console cursor
     initscr();
@@ -140,6 +142,6 @@ int main() {
         sleepMs(33);
     }
     echo();
-    system("setterm -cursor on"); //Removes console cursor
+    system("setterm -cursor on"); //Activates console cursor
     endwin();
 }

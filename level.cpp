@@ -12,8 +12,8 @@ Level::Level(int index)
     this->index = index;
     this->width = 40;
     this->height = 15;
-    this->turretsUpdate.updateTime = 20 - index < MIN_BULLET_UPDATE ? MIN_BULLET_UPDATE : 20 - index;
-    this->enemiesUpdate.updateTime = 20 - index < MIN_ENEMY_UPDATE ? MIN_ENEMY_UPDATE : 20 - index;
+    this->turretsUpdate.updateTime = 20 - index < minBullettUpdateTime ? minBullettUpdateTime : 20 - index;
+    this->enemiesUpdate.updateTime = 20 - index < minEnemyUpdateTime ? minEnemyUpdateTime : 20 - index;
     this->needsDraw = true;
     for(int i = 0; i < width + 1; i++) //Creates the space needed to print statistics based on the level width
     {
@@ -148,7 +148,7 @@ bool Level::entityGenerationCheck(bool allEntities, int remainingPlatforms, int 
     /* because in every level where this condition is true the number of platforms is equal to the number of that type
     /* of entities to be spawned, which means that every platform should have one entity of that type on itself.
     /*
-    /* (allEntities && remainingPlatforms > entitiesToBeSpawned && randomInRange(1, 10) > chance
+    /* (allEntities && remainingPlatforms > entitiesToBeSpawned && randomInRange(1, 10) > chance)
     /* If this condition is true, then the max number of entities should be built but the current number
     /* of remaining platforms allows for the current platform not to have a entity of that type on itself.
     /* randomInRange(1, 10) > chance is used to generate randomness in the levels and not make all entities
@@ -197,7 +197,7 @@ void Level::setEntities()
     int currentPlatforms = index > N_PLATFORMS ? N_PLATFORMS : index; //Indicates number of platforms in the current level
 
     //Indicates the damage each enemy should be assigned in the current level
-    int enemiesDamage = MIN_DAMAGE > index ? MIN_DAMAGE : (MAX_DAMAGE < index ? MAX_DAMAGE : index);
+    int enemiesDamage = minEnemyDamage > index ? minEnemyDamage : (maxEnemyDamage < index ? maxEnemyDamage : index);
     
     //For each platform, each entity will have a chance to spawn (therefore, there will always be at most only one entity of each type on a platform)
     for(int i = 0; i < currentPlatforms; i++)
@@ -228,11 +228,11 @@ void Level::setEntities()
             int bonusEffect;
             if(bonusType == 'h')
             {
-                bonusEffect = index > MAX_HEALTHBONUS ? MAX_HEALTHBONUS : (index < MIN_HEALTHBONUS ? MIN_HEALTHBONUS : index);
+                bonusEffect = index > maxHealthBonus ? maxHealthBonus : (index < minHealthBonus ? minHealthBonus : index);
             }
             else
             {
-                bonusEffect = index / 3 < MIN_POINTSBONUS ? MIN_POINTSBONUS : index / 3;
+                bonusEffect = index / 3 < minPointsBonus ? minPointsBonus : index / 3;
             }
             bonuses[bonusIndex] = new Bonus(randomInRange(platforms[i]->getStartingPointX(), platforms[i]->getEndingPointX()), platforms[i]->getY() - 1, bonusType, bonusEffect);
             bonusIndex++;
@@ -371,13 +371,13 @@ void Level::updateLevel()
     }
 }
 
-int Level::findTurretIndex(Player *player)
+int Level::findTurretIndex(Player player)
 {
     int turretIndex = 0;
     bool turretPresent = false;
     while(turretIndex < N_TURRETS && turrets[turretIndex] != NULL && !turretPresent)
     {
-        if(turrets[turretIndex]->getY() == player->getY())
+        if(turrets[turretIndex]->getY() == player.getY())
         {
             turretPresent = true;
         }
@@ -390,13 +390,13 @@ int Level::findTurretIndex(Player *player)
     return index;
 }
 
-int Level::findEnemyIndex(Player *player)
+int Level::findEnemyIndex(Player player)
 {
     bool enemyPresent = false;
     int enemyIndex = 0;
     while(enemyIndex < N_ENEMIES && enemies[enemyIndex] != NULL && !enemyPresent)
     {
-        if(enemies[enemyIndex]->getY() == player->getY())
+        if(enemies[enemyIndex]->getY() == player.getY())
         {
             enemyPresent = true;
         }
@@ -488,7 +488,7 @@ void Level::playerUpdate(Player *player, int keyPressed)
     /* 
     /* enemyIndex assignment is completely analogous.
     */
-    int turretIndex = (platformIndex == -1 && !changedPlatform) ? -1 : findTurretIndex(player);
+    int turretIndex = (platformIndex == -1 && !changedPlatform) ? -1 : findTurretIndex(*player);
     
     /* First bullet collision check
     /*
@@ -525,7 +525,7 @@ void Level::playerUpdate(Player *player, int keyPressed)
     }
 
     int currentEnemyDirection;
-    int enemyIndex = (platformIndex == -1 && !changedPlatform) ? -1 : findEnemyIndex(player);
+    int enemyIndex = (platformIndex == -1 && !changedPlatform) ? -1 : findEnemyIndex(*player);
 
     //First enemy collision check
     if(enemyIndex != -1)
