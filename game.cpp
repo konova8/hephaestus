@@ -100,17 +100,17 @@ int main() {
     noecho(); //Prevents the console form printing typed keys
     nodelay(stdscr, true); //Makes getch() non blocking
     keypad(stdscr, TRUE); //Allows use of arrow keys
-    int k;
+    int key;
     int playerAtBorder;
-    while(k != 'q' && player.getHealth() > 0)
+    while(key != 'q' && player.getHealth() > 0)
     {
         currentNode->level->drawLevel(player);
-        k = convertMove(getch());
+        key = convertMove(getch());
         currentNode->level->updateLevel();
-        currentNode->level->playerUpdate(&player, k);
+        currentNode->level->playerUpdate(&player, key);
 
         //If move is a side move, check if player is at end/start of level, and if it is, move it to the next/previous level
-        if(k == 'd' || k == 'a')
+        if(key == 'd' || key == 'a')
         {
             playerAtBorder = currentNode->level->isPlayerAtBorder(player);
             if(playerAtBorder == 1)
@@ -126,7 +126,7 @@ int main() {
             {
                 if(currentNode->level->getIndex() == 1)
                 {
-                    k = 'q';
+                    key = 'q';
                 }
                 else
                 {
@@ -140,6 +140,14 @@ int main() {
             }
         }
         sleepMs(33);
+    }
+    key = ERR;
+    clear();
+    nodelay(stdscr, false);
+    printw("Game over\nFinal points: %d\nPress q to exit", player.getPoints());
+    while(key != 'q')
+    {
+        key = getch();
     }
     echo();
     system("setterm -cursor on"); //Activates console cursor
