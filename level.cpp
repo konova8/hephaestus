@@ -24,7 +24,7 @@ Level::Level(int index)
     setEntities();
 }
 
-int Level::randomInRange(int min, int max)
+int randomInRange(int min, int max)
 {
     if(max < min)
     {

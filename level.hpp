@@ -38,7 +38,6 @@ class Level
         int height;
         bool needsDraw;
         char spaces[100];
-        int randomInRange(int min, int max);
         void initializeEntitiesLists();
         void drawBorders();
         void setPlatforms();
