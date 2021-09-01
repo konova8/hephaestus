@@ -42,29 +42,29 @@ int convertMove(int keyPressed)
         default:
             newKeyPressed = ERR;
             break;
-        case 'w':
-        case 'W':
+        case (int)'w':
+        case (int)'W':
         case KEY_UP:
-            newKeyPressed = 'w';
+            newKeyPressed = (int)'w';
             break;
-        case 's':
-        case 'S':
+        case (int)'s':
+        case (int)'S':
         case KEY_DOWN:
-            newKeyPressed = 's';
+            newKeyPressed = (int)'s';
             break;
-        case 'd':
-        case 'D':
+        case (int)'d':
+        case (int)'D':
         case KEY_RIGHT:
-            newKeyPressed = 'd';
+            newKeyPressed = (int)'d';
             break;
-        case 'a':
-        case 'A':
+        case (int)'a':
+        case (int)'A':
         case KEY_LEFT:
-            newKeyPressed = 'a';
+            newKeyPressed = (int)'a';
             break;
-        case 'q':
-        case 'Q':
-            newKeyPressed = 'q';
+        case (int)'q':
+        case (int)'Q':
+            newKeyPressed = (int)'q';
     }
     return newKeyPressed;
 }
@@ -102,7 +102,7 @@ int main() {
     keypad(stdscr, TRUE); //Allows use of arrow keys
     int key;
     int playerAtBorder;
-    while(key != 'q' && player.getHealth() > 0)
+    while(key != (int)'q' && player.getHealth() > 0)
     {
         currentNode->level->drawLevel(player);
         key = convertMove(getch());
@@ -110,7 +110,7 @@ int main() {
         currentNode->level->playerUpdate(&player, key);
 
         //If move is a side move, check if player is at end/start of level, and if it is, move it to the next/previous level
-        if(key == 'd' || key == 'a')
+        if(key == (int)'d' || key == (int)'a')
         {
             playerAtBorder = currentNode->level->isPlayerAtBorder(player);
             if(playerAtBorder == 1)
@@ -126,7 +126,7 @@ int main() {
             {
                 if(currentNode->level->getIndex() == 1)
                 {
-                    key = 'q';
+                    key = (int)'q';
                 }
                 else
                 {
@@ -145,7 +145,7 @@ int main() {
     clear();
     nodelay(stdscr, false);
     printw("Game over\nFinal points: %d\nPress q to exit", player.getPoints());
-    while(key != 'q')
+    while(key != (int)'q')
     {
         key = getch();
     }

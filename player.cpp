@@ -18,19 +18,19 @@ int Player::getPoints()
 }
 
 void Player::move(int keyPressed){
-    if (keyPressed == 'd')
+    if (keyPressed == (int)'d')
     {
         SingleBlockEntity::move(1, 0);
     }
-    else if (keyPressed == 'a')
+    else if (keyPressed == (int)'a')
     {  
         SingleBlockEntity::move(-1, 0);
     }
-    else if (keyPressed == 'w')
+    else if (keyPressed == (int)'w')
     {
         SingleBlockEntity::move(0, -1);
     }
-    else if (keyPressed == 's')
+    else if (keyPressed == (int)'s')
     {
         SingleBlockEntity::move(0, 1);
     }
@@ -38,11 +38,11 @@ void Player::move(int keyPressed){
 
 int Player::getXAfterMove(int keyPressed){
     int xAfterMove = 0;
-    if (keyPressed == 'd')
+    if (keyPressed == (int)'d')
     {
         xAfterMove = SingleBlockEntity::getX() + 1;
     }
-    else if (keyPressed == 'a')
+    else if (keyPressed == (int)'a')
     { 
         xAfterMove = SingleBlockEntity::getX() - 1;
     }

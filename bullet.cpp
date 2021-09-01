@@ -2,7 +2,7 @@
 
 Bullet::Bullet(int x, int y, int direction, int damage, char symbol) : SingleBlockEntity(x, y, true, symbol)
 {
-    this->direction = direction; // 1 DX, -1 SX, non usare altri valori
+    this->direction = direction; // 1 = right, -1 = left
     this->damage = damage;
 }
 
