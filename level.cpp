@@ -411,7 +411,7 @@ int Level::findEnemyIndex(Player player)
 
 void Level::playerUpdate(Player *player, int keyPressed)
 {
-    bool sideMove = keyPressed == ERR ? false : true; //If nothing is pressed then there is no move, so the move is not a side move.
+    bool sideMove = keyPressed != ERR; //If nothing is pressed then there is no move, so the move is not a side move.
     bool changedPlatform = false; //Needed to determine when to kill an enemy.
 
     //Determine what platform the player is on.
@@ -424,57 +424,62 @@ void Level::playerUpdate(Player *player, int keyPressed)
     }
 
     //Handle and perform vertical moves
-    if(keyPressed == (int)'w' && platformIndex + 1 < currentPlatforms) //Useless to check for upper platforms if player is at the top
+    if(keyPressed == (int)'w') //Useless to check for upper platforms if player is at the top
     {
-        //Check if the block at the top of the player belongs to the platform at the top of the player. If it does, perform the move.
-        if(player->getX() >= platforms[platformIndex + 1]->getStartingPointX() && player->getX() <= platforms[platformIndex + 1]->getEndingPointX())
+        if(platformIndex + 1 < currentPlatforms)
         {
-            player->move(keyPressed);
-            player->move(keyPressed);
-            changedPlatform = true;
-            needsDraw = true;
+            //Check if the block at the top of the player belongs to the platform at the top of the player. If it does, perform the move.
+            if(player->getX() >= platforms[platformIndex + 1]->getStartingPointX() && player->getX() <= platforms[platformIndex + 1]->getEndingPointX())
+            {
+                player->move(keyPressed);
+                player->move(keyPressed);
+                changedPlatform = true;
+                needsDraw = true;
+            }
         }
         sideMove = false;
     }
-    else if(keyPressed == (int)'s' && platformIndex > -1) //Useless to check for platforms under player if player is not on the ground
+    else if(keyPressed == (int)'s') //Useless to check for platforms under player if player is not on the ground
     {
-        bool allowedDownMove = false;
-
-        //If at first platform, the player can always go down
-        if(platformIndex == 0)
+        if(platformIndex > -1)
         {
-            allowedDownMove = true;
-        }
+            bool allowedDownMove = false;
 
-        //Otherwise, check if the block under the player belongs to the platform under the player.
-        else if((player->getX() >= platforms[platformIndex - 1]->getStartingPointX() && player->getX() <= platforms[platformIndex - 1]->getEndingPointX()))
-        {
-            allowedDownMove = true;
-        }
+            //If at first platform, the player can always go down
+            if(platformIndex == 0)
+            {
+                allowedDownMove = true;
+            }
 
-        //If the move is allowed, perform it
-        if(allowedDownMove)
-        {
-            player->move(keyPressed);
-            player->move(keyPressed);
-            changedPlatform = true;
-            needsDraw = true;
+            //Otherwise, check if the block under the player belongs to the platform under the player.
+            else if((player->getX() >= platforms[platformIndex - 1]->getStartingPointX() && player->getX() <= platforms[platformIndex - 1]->getEndingPointX()))
+            {
+                allowedDownMove = true;
+            }
+
+            //If the move is allowed, perform it
+            if(allowedDownMove)
+            {
+                player->move(keyPressed);
+                player->move(keyPressed);
+                changedPlatform = true;
+                needsDraw = true;
+            }
         }
         sideMove = false;
     }
 
     //Check if side move is legal
-    bool platformSideMoveLegal = sideMove ? true : false; //Not legal => player will not move to the left or right
     int playerXAfterMove = player->getXAfterMove(keyPressed);
-    if(platformSideMoveLegal)
+    if(sideMove)
     {
         if (platformIndex != -1 &&                                               //If the player is on the ground, don't check for legality of platform side move
             (playerXAfterMove == width ||                                        //If the x after the move is the width, the move is illegal
-            playerXAfterMove == 0 ||                                            //If the x after the move is 0, the move is illegal
+            playerXAfterMove == 0 ||                                            //If the x after the move is 0, the move is either illegal
             platforms[platformIndex]->getStartingPointX() > playerXAfterMove    //If the x after the move is not on the platform, the move is illegal
             || platforms[platformIndex]->getEndingPointX() < playerXAfterMove)) //If the x after the move is not on the platform, the move is illegal
         {
-            platformSideMoveLegal = false;
+            sideMove = false;
         }
     }
 
@@ -517,7 +522,7 @@ void Level::playerUpdate(Player *player, int keyPressed)
         currentBulletDirection = turrets[turretIndex]->getBulletDirection();
         if(turrets[turretIndex]->isBulletColliding(*player))
         {
-            if((currentBulletDirection == 1 && keyPressed != (int)'d') || (currentBulletDirection == -1 && keyPressed != (int)'a') || !platformSideMoveLegal)
+            if((currentBulletDirection == 1 && keyPressed != (int)'d') || (currentBulletDirection == -1 && keyPressed != (int)'a') || !sideMove)
             {
                 turrets[turretIndex]->hitPlayer(player);
                 turrets[turretIndex]->resetBullet();
@@ -535,7 +540,7 @@ void Level::playerUpdate(Player *player, int keyPressed)
         currentEnemyDirection = enemies[enemyIndex]->getDirection();
         if(enemies[enemyIndex]->getExistence() && enemies[enemyIndex]->isColliding(*player))
         {
-            if(((currentEnemyDirection == 1 && keyPressed != (int)'d') || (currentEnemyDirection == -1 && keyPressed != (int)'a') || !platformSideMoveLegal) && !changedPlatform)
+            if(((currentEnemyDirection == 1 && keyPressed != (int)'d') || (currentEnemyDirection == -1 && keyPressed != (int)'a') || !sideMove) && !changedPlatform)
             {
                 enemies[enemyIndex]->hitPlayer(player);
                 needsDraw = true;
@@ -551,7 +556,7 @@ void Level::playerUpdate(Player *player, int keyPressed)
     }
 
     //Perform player side move
-    if(platformSideMoveLegal)
+    if(sideMove)
     {
         player->move(keyPressed);
         needsDraw = true;
