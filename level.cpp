@@ -500,7 +500,7 @@ void Level::playerUpdate(Player *player, int keyPressed)
     /* First bullet collision check
     /*
     /* This collision check is for the case where a bullet
-    /* is colliding with the player, but the player's side
+    /* is colliding with the player, but the player's
     /* side move has not been performed yet, provided
     /* the move was actually a side move, in the other case,
     /* if the move was a up/down move, then it has already
