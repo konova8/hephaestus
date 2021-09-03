@@ -424,9 +424,9 @@ void Level::playerUpdate(Player *player, int keyPressed)
     }
 
     //Handle and perform vertical moves
-    if(keyPressed == (int)'w') //Useless to check for upper platforms if player is at the top
+    if(keyPressed == (int)'w')
     {
-        if(platformIndex + 1 < currentPlatforms)
+        if(platformIndex + 1 < currentPlatforms)  //Useless to check for upper platforms if player is at the top
         {
             //Check if the block at the top of the player belongs to the platform at the top of the player. If it does, perform the move.
             if(player->getX() >= platforms[platformIndex + 1]->getStartingPointX() && player->getX() <= platforms[platformIndex + 1]->getEndingPointX())
@@ -439,9 +439,9 @@ void Level::playerUpdate(Player *player, int keyPressed)
         }
         sideMove = false;
     }
-    else if(keyPressed == (int)'s') //Useless to check for platforms under player if player is not on the ground
+    else if(keyPressed == (int)'s') 
     {
-        if(platformIndex > -1)
+        if(platformIndex > -1) //Useless to check for platforms under player if player is on the ground
         {
             bool allowedDownMove = false;
 
