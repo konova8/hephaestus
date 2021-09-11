@@ -19,7 +19,6 @@ class SingleBlockEntity
         void print();
         void move(int moveX, int moveY);
         void deactivate();
-        
 };
 
 #endif
