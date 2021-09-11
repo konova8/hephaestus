@@ -17,6 +17,7 @@ class Turret : public SingleBlockEntity
         bool isBulletColliding(SingleBlockEntity entity); //Checks if the bullet is colliding with an entity
         void printBullet();
         void hitPlayer(Player *player); //Hits the player and resets the bullet
+        void destroy();
 };
 
 #endif

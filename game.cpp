@@ -152,4 +152,17 @@ int main() {
     echo();
     system("setterm -cursor on"); //Activates console cursor
     endwin();
+    while(currentNode->level->getIndex() != 1)
+    {
+        currentNode = currentNode->prev;
+    }
+    mapNode *tmp = currentNode;
+    while(currentNode != NULL)
+    {
+        tmp = currentNode->next;
+        currentNode->level->destroy();
+        delete currentNode->level;
+        delete currentNode;
+        currentNode = tmp;
+    }
 }

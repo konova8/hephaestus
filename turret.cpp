@@ -50,3 +50,8 @@ void Turret::hitPlayer(Player *player)
 {
     bullet->hitPlayer(player);
 }
+
+void Turret::destroy()
+{
+    delete bullet;
+}

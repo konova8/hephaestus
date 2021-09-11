@@ -624,3 +624,36 @@ int Level::isPlayerAtBorder(Player player)
     }
     return result;
 }
+
+void Level::destroy()
+{
+    for(int i = 0; i < N_PLATFORMS; i++)
+    {
+        if(platforms[i] != NULL)
+        {
+            delete platforms[i];
+        }
+    }
+    for(int i = 0; i < N_TURRETS; i++)
+    {
+        if(turrets[i] != NULL)
+        {
+            turrets[i]->destroy();
+            delete turrets[i];
+        }
+    }
+    for(int i = 0; i < N_ENEMIES; i++)
+    {
+        if(enemies[i] != NULL)
+        {
+            delete enemies[i];
+        }
+    }
+    for(int i = 0; i < N_BONUSES; i++)
+    {
+        if(bonuses[i] != NULL)
+        {
+            delete bonuses[i];
+        }
+    }
+}
