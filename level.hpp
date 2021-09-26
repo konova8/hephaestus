@@ -6,7 +6,7 @@
 #include "enemy.hpp"
 #include "turret.hpp"
 #include "platform.hpp"
-#define N_PLATFORMS 6 
+#define N_PLATFORMS 6
 #define N_ENEMIES 4
 #define N_TURRETS 3
 #define N_BONUSES 2

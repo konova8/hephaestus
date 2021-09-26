@@ -138,7 +138,7 @@ bool Level::entityGenerationCheck(bool allEntities, int remainingPlatforms, int 
     /* able to spawn on every platform (with only one entity of each type per platform max)
     /* but with different probabilities, the following conditions allow to do what was
     /* just explained
-    /* 
+    /*
     /* Entity generation check conditions
     /*
     /* In all of these cases, the condition entitiesSpawned < entitiesToBeSpawned must be satisfied, which is self explanatory.
@@ -198,7 +198,7 @@ void Level::setEntities()
 
     //Indicates the damage each enemy should be assigned in the current level
     int enemiesDamage = minEnemyDamage > index ? minEnemyDamage : (maxEnemyDamage < index ? maxEnemyDamage : index);
-    
+
     //For each platform, each entity will have a chance to spawn (therefore, there will always be at most only one entity of each type on a platform)
     for(int i = 0; i < currentPlatforms; i++)
     {
@@ -295,7 +295,7 @@ void Level::drawLevel(Player player)
 void Level::updateLevel()
 {
     bool turretsUpdated = false, enemiesUpdated = false;
-    
+
     //Update bullets
     if(turretsUpdate.updateCounter % turretsUpdate.updateTime == 0)
     {
@@ -320,7 +320,7 @@ void Level::updateLevel()
             if(enemies[i]->getExistence())
             {
                 correspondingPlatformIndex = 0;
-                
+
                 //Find index of the platform the enemy is on
                 while(correspondingPlatformIndex < N_PLATFORMS && platforms[correspondingPlatformIndex] != NULL && enemies[i]->getY() != platforms[correspondingPlatformIndex]->getY() - 1)
                 {
@@ -439,7 +439,7 @@ void Level::playerUpdate(Player *player, int keyPressed)
         }
         sideMove = false;
     }
-    else if(keyPressed == (int)'s') 
+    else if(keyPressed == (int)'s')
     {
         if(platformIndex > -1) //Useless to check for platforms under player if player is on the ground
         {
@@ -492,11 +492,11 @@ void Level::playerUpdate(Player *player, int keyPressed)
     /*
     /* Otherwise, find the turret index of the turret at the y of the player and assign it
     /* to turretIndex
-    /* 
+    /*
     /* enemyIndex assignment is completely analogous.
     */
     int turretIndex = (platformIndex == -1 && !changedPlatform) ? -1 : findTurretIndex(*player);
-    
+
     /* First bullet collision check
     /*
     /* This collision check is for the case where a bullet
