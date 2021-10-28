@@ -160,7 +160,7 @@ bool Level::entityGenerationCheck(bool allEntities, int remainingPlatforms, int 
     /* allow for one entity not to be spawned in the current one. If it were to allow
     /* it, then the final number of entities spawned would be less than the number of
     /* entities to be spawned.
-    /* 
+    /*
     */
     bool generate = false;
     if(entitiesSpawned < entitiesToBeSpawned)
@@ -570,7 +570,7 @@ void Level::playerUpdate(Player *player, int keyPressed)
     /*
     /* It's a simple matter of checking if the x and the y of
     /* the two entities are the same.
-    /* 
+    /*
     /* The second enemy collision check is completely analogous
     */
     if(turretIndex != -1)
